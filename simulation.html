@@ -192,6 +192,11 @@
           <section class="control-group" aria-labelledby="wind-group-heading">
             <h3 id="wind-group-heading">Wind</h3>
             <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Wind direction</span><span class="slider-value"><output id="windDirection-value" for="windDirection">100</output> <span class="slider-unit">deg</span></span></div>
+              <input type="range" id="windDirection" min="0" max="359" step="1" value="100">
+              <div class="slider-ticks"><span>0</span><span>359</span></div>
+            </div>
+            <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Wind speed</span><span class="slider-value"><output id="windSpeed-value" for="windSpeed">12</output><span class="slider-unit">m/s</span></span></div>
               <input type="range" id="windSpeed" data-param="windSpeed" min="3" max="25" step="0.5" value="12">
               <div class="slider-ticks"><span>3</span><span>25</span></div>

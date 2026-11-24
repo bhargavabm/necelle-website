@@ -313,6 +313,34 @@
     generator.position.y = PAD_HEIGHT + 7 - towerTopY;
     yawAssembly.add(generator);
 
+    const windArrowMaterial = new THREE.MeshBasicMaterial({
+      color: 0x22d3ee,
+      transparent: true,
+      opacity: 0.5,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const windArrowShape = new THREE.Shape();
+    windArrowShape.moveTo(-2.6, -0.25);
+    windArrowShape.lineTo(0.9, -0.25);
+    windArrowShape.lineTo(0.9, -0.7);
+    windArrowShape.lineTo(2.6, 0);
+    windArrowShape.lineTo(0.9, 0.7);
+    windArrowShape.lineTo(0.9, 0.25);
+    windArrowShape.lineTo(-2.6, 0.25);
+    windArrowShape.closePath();
+    const windArrowUprightGeometry = new THREE.ShapeGeometry(windArrowShape);
+    const windArrowFlatGeometry = windArrowUprightGeometry.clone();
+    windArrowFlatGeometry.rotateX(Math.PI / 2);
+    const windArrows = [];
+    for (let i = 0; i < 7; i += 1) {
+      const arrow = new THREE.Group();
+      arrow.add(new THREE.Mesh(windArrowUprightGeometry, windArrowMaterial));
+      arrow.add(new THREE.Mesh(windArrowFlatGeometry, windArrowMaterial));
+      windArrows.push(arrow);
+      scene.add(arrow);
+    }
+
     // CAMERA
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 2000);
     camera.position.set(72, 52, 118);
@@ -380,6 +408,23 @@
 
     applySectionCamera();
 
+    function updateWindArrows() {
+      const directionRadians = state.trueWindDirection * DEG_TO_RAD;
+      const fromX = -Math.sin(directionRadians);
+      const fromZ = Math.cos(directionRadians);
+      const sideX = -fromZ;
+      const sideZ = fromX;
+      const speed = (state.params.windSpeed / 12) * 0.12;
+      windArrows.forEach(function (arrow, index) {
+        const progress = (state.time * speed + index / windArrows.length) % 1;
+        const distance = 150 * (1 - progress);
+        const sideOffset = (index % 3 - 1) * 14;
+        const heightOffset = (index % 2 - 0.5) * 5;
+        arrow.position.set(fromX * distance + sideX * sideOffset, towerTopY + nacelleY + heightOffset, fromZ * distance + sideZ * sideOffset);
+        arrow.rotation.y = Math.PI / 2 - directionRadians;
+      });
+    }
+
     function setSectionClipping(enabled) {
       steelMaterial.clippingPlanes = enabled ? [sectionClipPlane] : [];
       steelMaterial.clipShadows = enabled;
@@ -392,6 +437,7 @@
       tower: tower,
       yawAssembly: yawAssembly,
       rotor: rotor,
+      windArrows: windArrows,
       get activeCamera() { return activeCamera; },
       get controlsEnabled() { return controls.enabled; },
       get sectionControlsEnabled() { return sectionControlsEnabled; },
@@ -417,6 +463,25 @@
             nz: sectionClipPlane.normal.z,
             constant: sectionClipPlane.constant
           }
+        };
+      },
+      get windArrowState() {
+        return {
+          count: windArrows.length,
+          directionDeg: state.trueWindDirection,
+          rotationY: windArrows[0].rotation.y,
+          fromX: -Math.sin(state.trueWindDirection * DEG_TO_RAD),
+          fromZ: Math.cos(state.trueWindDirection * DEG_TO_RAD),
+          speed: (state.params.windSpeed / 12) * 0.12,
+          positions: windArrows.map(function (arrow) {
+            return { x: arrow.position.x, y: arrow.position.y, z: arrow.position.z };
+          })
+        };
+      },
+      get windArrowMaterialState() {
+        return {
+          color: windArrowMaterial.color.getHexString(),
+          opacity: windArrowMaterial.opacity
         };
       }
     };
@@ -794,6 +859,24 @@
       });
     });
 
+    const windDirectionInput = document.getElementById("windDirection");
+    const windDirectionOutput = document.getElementById("windDirection-value");
+
+    function setWindDirection(value) {
+      const degrees = Math.max(0, Math.min(359, Math.round(Number(value))));
+      state.trueWindDirection = degrees;
+      state.windTarget = degrees;
+      if (windDirectionInput) windDirectionInput.value = String(degrees);
+      if (windDirectionOutput) windDirectionOutput.textContent = String(degrees);
+      if (readoutWindDirection) readoutWindDirection.textContent = String(degrees);
+    }
+
+    if (windDirectionInput) {
+      windDirectionInput.addEventListener("input", function () {
+        setWindDirection(windDirectionInput.value);
+      });
+    }
+
     function applyPreset(name) {
       const preset = PRESETS[name];
       if (!preset) return;
@@ -840,8 +923,7 @@
       state.time = 0;
       state.accumulator = 0;
       state.heading = 0;
-      state.trueWindDirection = 100;
-      state.windTarget = 100;
+      setWindDirection(100);
       state.windChangeTimer = randomBetween(4, 10);
       state.gusts = false;
       state.gustPhase = 0;
@@ -1249,6 +1331,7 @@
       updateWindCaption();
       updateWorkflow(frameTime);
       updateCharts();
+      updateWindArrows();
       controls.update();
       renderer.render(scene, activeCamera);
     }
