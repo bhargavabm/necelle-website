@@ -31,8 +31,49 @@
 
     <section class="card" id="architecture" aria-labelledby="architecture-heading">
       <h2 id="architecture-heading">Architecture</h2>
-      <p>Wind sensors measure direction and speed. The controller compares the wind direction with the nacelle heading and computes a yaw rate command from proportional and derivative gains, sensor delay, and a deadband.</p>
-      <p>The yaw motor turns the nacelle on the yaw bearing. Power output is calculated from the angle between the rotor and the wind. The ground cabinet holds the generator and controller in the model.</p>
+      <p>A wind turbine produces the most power when its rotor faces the wind. The nacelle, the housing on top of the tower, turns on a yaw bearing to keep the rotor aligned as the wind changes. This project models that control loop and runs it in the browser.</p>
+
+      <h3>The control loop</h3>
+      <ol>
+        <li>Wind sensors on the nacelle roof measure the wind direction and speed.</li>
+        <li>The controller calculates misalignment, which is the wind direction minus the nacelle heading.</li>
+        <li>A PD controller computes the yaw rate command from the misalignment and how quickly it is changing, using the proportional gain Kp and derivative gain Kd.</li>
+        <li>A deadband sets the command to zero when the misalignment is small, so the motor does not make tiny corrections.</li>
+        <li>A rate limit caps the command at the maximum speed of the yaw motor.</li>
+        <li>The yaw motor turns the nacelle on the yaw bearing, with a short response lag.</li>
+        <li>The new nacelle heading feeds back into step 2, closing the loop.</li>
+      </ol>
+
+      <h3>Power and alignment</h3>
+      <p>Power output is calculated as the cosine squared of the misalignment. A turbine 10 degrees off the wind keeps about 97 percent of its output, and one 45 degrees off keeps half.</p>
+
+      <h3>Drivetrain</h3>
+      <p>The rotor turns a vertical transmission shaft down the tower to a bottom hub. A gearbox with a ratio of 50 to 1 drives the generator on the ground, so generator speed is 50 times rotor speed. The ground cabinet holds the generator and controller in this model.</p>
+
+      <h3>States</h3>
+      <dl>
+        <dt>IDLE:</dt>
+        <dd>the simulation is not running.</dd>
+        <dt>MONITORING:</dt>
+        <dd>the misalignment is under 5 degrees.</dd>
+        <dt>TURNING:</dt>
+        <dd>the misalignment is over 5 degrees and the nacelle is moving.</dd>
+        <dt>ALIGNED:</dt>
+        <dd>the misalignment has stayed under 5 degrees for at least 3 seconds.</dd>
+        <dt>FAULT:</dt>
+        <dd>the misalignment has stayed over 45 degrees for more than 10 seconds after the first alignment.</dd>
+      </dl>
+
+      <h3>Measured results</h3>
+      <p>Ten runs of the Stable preset from the same starting point gave a median settling time of 27.6 seconds, with a range of 19.7 to 38.5 seconds. The median mean error after settling was 2.2 degrees, and the median steady power was 99.8 percent. The wind model is random, so results vary between runs.</p>
+
+      <h3>Limits of the model</h3>
+      <ul>
+        <li>Rotor speed scales linearly with wind speed. Real turbines limit rotor speed at high wind.</li>
+        <li>Wind changes are random, so settling time varies between runs.</li>
+        <li>The vertical transmission shaft is a simplified design. Real turbines use a horizontal main shaft inside the nacelle.</li>
+        <li>Power and sensor wiring to the rotating nacelle would need a slip ring or a wireless link. The model does not simulate this.</li>
+      </ul>
     </section>
 
     <section class="card" id="contact" aria-labelledby="contact-heading">
@@ -52,14 +93,14 @@
           <label for="contact-message">Message</label>
           <textarea id="contact-message" name="message" rows="5" required></textarea>
         </div>
-        <p class="form-error" id="contact-error" role="alert" hidden></p>
+        <p class="form-error" id="contact-error" role="alert" hidden style="font-size: var(--font-body);"></p>
         <button type="submit" class="button button-primary contact-submit">Open email app</button>
       </form>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
+    <div class="footer-inner" style="font-size: var(--font-body);">
       <p class="footer-name">Automated Nacelle Alignment System</p>
       <p>UVCE Bengaluru, Mechanical Engineering</p>
       <p>Contact: <a href="mailto:bhargavabm2007@gmail.com">bhargavabm2007@gmail.com</a></p>
