@@ -61,6 +61,7 @@
 
   function start(THREE) {
     const container = document.getElementById("scene-container");
+    const sectionResetView = document.getElementById("section-reset-view");
     if (!container) return;
 
     // SCENE
@@ -317,11 +318,67 @@
     camera.position.set(72, 52, 118);
 
     const SECTION_VIEW_HEIGHT = 160;
+    const SECTION_MIN_FRUSTUM_HEIGHT = 60;
+    const SECTION_MAX_FRUSTUM_HEIGHT = 300;
+    const SECTION_MIN_ELEVATION = 0.02;
+    const SECTION_MAX_ELEVATION = Math.PI / 2 - 0.02;
+    const SECTION_DEFAULT_POSITION = new THREE.Vector3(190, 60, 0);
+    const SECTION_DEFAULT_TARGET = new THREE.Vector3(0, 38, 0);
+    const SECTION_RADIUS = SECTION_DEFAULT_POSITION.distanceTo(SECTION_DEFAULT_TARGET);
     const sectionCamera = new THREE.OrthographicCamera(-80, 80, 80, -80, 0.1, 2000);
-    sectionCamera.position.set(190, 60, 0);
-    sectionCamera.lookAt(0, 38, 0);
+    const sectionTarget = SECTION_DEFAULT_TARGET.clone();
     const sectionClipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
+    const sectionDefaultAzimuth = Math.atan2(SECTION_DEFAULT_POSITION.x - sectionTarget.x, SECTION_DEFAULT_POSITION.z - sectionTarget.z);
+    const sectionDefaultElevation = Math.asin((SECTION_DEFAULT_POSITION.y - sectionTarget.y) / SECTION_RADIUS);
+    let sectionAzimuth = sectionDefaultAzimuth;
+    let sectionElevation = sectionDefaultElevation;
+    let sectionFrustumHeight = SECTION_VIEW_HEIGHT;
+    let sectionControlsEnabled = false;
     let activeCamera = camera;
+
+    function sectionClamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function updateSectionFrustum() {
+      const aspect = Math.max(container.clientWidth, 1) / Math.max(container.clientHeight, 1);
+      const halfHeight = sectionFrustumHeight / 2;
+      sectionCamera.left = -halfHeight * aspect;
+      sectionCamera.right = halfHeight * aspect;
+      sectionCamera.top = halfHeight;
+      sectionCamera.bottom = -halfHeight;
+      sectionCamera.updateProjectionMatrix();
+    }
+
+    function updateSectionClipPlane() {
+      const normal = new THREE.Vector3().subVectors(sectionTarget, sectionCamera.position);
+      normal.y = 0;
+      if (normal.lengthSq() < 0.00000001) normal.set(-1, 0, 0);
+      else normal.normalize();
+      sectionClipPlane.normal.copy(normal);
+      sectionClipPlane.constant = -normal.dot(sectionTarget);
+    }
+
+    function applySectionCamera() {
+      const horizontal = SECTION_RADIUS * Math.cos(sectionElevation);
+      sectionCamera.position.set(
+        sectionTarget.x + horizontal * Math.sin(sectionAzimuth),
+        sectionTarget.y + SECTION_RADIUS * Math.sin(sectionElevation),
+        sectionTarget.z + horizontal * Math.cos(sectionAzimuth)
+      );
+      sectionCamera.lookAt(sectionTarget);
+      updateSectionFrustum();
+      updateSectionClipPlane();
+    }
+
+    function resetSectionCamera() {
+      sectionAzimuth = sectionDefaultAzimuth;
+      sectionElevation = sectionDefaultElevation;
+      sectionFrustumHeight = SECTION_VIEW_HEIGHT;
+      applySectionCamera();
+    }
+
+    applySectionCamera();
 
     function setSectionClipping(enabled) {
       steelMaterial.clippingPlanes = enabled ? [sectionClipPlane] : [];
@@ -335,13 +392,40 @@
       tower: tower,
       yawAssembly: yawAssembly,
       rotor: rotor,
-      get activeCamera() { return activeCamera; }
+      get activeCamera() { return activeCamera; },
+      get controlsEnabled() { return controls.enabled; },
+      get sectionControlsEnabled() { return sectionControlsEnabled; },
+      get sectionState() {
+        return {
+          azimuth: sectionAzimuth,
+          elevation: sectionElevation,
+          radius: SECTION_RADIUS,
+          frustumHeight: sectionFrustumHeight,
+          position: {
+            x: sectionCamera.position.x,
+            y: sectionCamera.position.y,
+            z: sectionCamera.position.z
+          },
+          target: {
+            x: sectionTarget.x,
+            y: sectionTarget.y,
+            z: sectionTarget.z
+          },
+          clipPlane: {
+            nx: sectionClipPlane.normal.x,
+            ny: sectionClipPlane.normal.y,
+            nz: sectionClipPlane.normal.z,
+            constant: sectionClipPlane.constant
+          }
+        };
+      }
     };
 
     class OrbitControls {
       constructor(cameraInstance, domElement) {
         this.camera = cameraInstance;
         this.domElement = domElement;
+        this.enabled = true;
         this.target = new THREE.Vector3();
         this.minDistance = 35;
         this.maxDistance = 360;
@@ -376,7 +460,7 @@
       }
 
       handlePointerDown(event) {
-        if (event.button !== 0) return;
+        if (!this.enabled || event.button !== 0) return;
         this.dragging = true;
         this.lastX = event.clientX;
         this.lastY = event.clientY;
@@ -384,7 +468,7 @@
       }
 
       handlePointerMove(event) {
-        if (!this.dragging) return;
+        if (!this.enabled || !this.dragging) return;
         const deltaX = event.clientX - this.lastX;
         const deltaY = event.clientY - this.lastY;
         this.lastX = event.clientX;
@@ -401,6 +485,7 @@
       }
 
       handleWheel(event) {
+        if (!this.enabled) return;
         event.preventDefault();
         this.scale *= Math.exp(event.deltaY * this.zoomSpeed);
       }
@@ -431,6 +516,124 @@
     controls.target.set(0, 44, 0);
     controls.update();
 
+    let sectionDragging = false;
+    let sectionLastX = 0;
+    let sectionLastY = 0;
+    let sectionTouchMode = "none";
+    let sectionPinchDistance = 0;
+
+    function rotateSectionCamera(deltaX, deltaY) {
+      sectionAzimuth -= deltaX * 0.006;
+      sectionElevation = sectionClamp(sectionElevation + deltaY * 0.004, SECTION_MIN_ELEVATION, SECTION_MAX_ELEVATION);
+      applySectionCamera();
+    }
+
+    function touchDistance(touches) {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function sectionPointerDown(event) {
+      if (!sectionControlsEnabled || event.pointerType === "touch" || event.button !== 0) return;
+      sectionDragging = true;
+      sectionLastX = event.clientX;
+      sectionLastY = event.clientY;
+      renderer.domElement.setPointerCapture(event.pointerId);
+    }
+
+    function sectionPointerMove(event) {
+      if (!sectionControlsEnabled || !sectionDragging || event.pointerType === "touch") return;
+      const deltaX = event.clientX - sectionLastX;
+      const deltaY = event.clientY - sectionLastY;
+      sectionLastX = event.clientX;
+      sectionLastY = event.clientY;
+      rotateSectionCamera(deltaX, deltaY);
+    }
+
+    function sectionPointerUp(event) {
+      sectionDragging = false;
+      if (renderer.domElement.hasPointerCapture(event.pointerId)) {
+        renderer.domElement.releasePointerCapture(event.pointerId);
+      }
+    }
+
+    function sectionWheel(event) {
+      if (!sectionControlsEnabled) return;
+      event.preventDefault();
+      sectionFrustumHeight = sectionClamp(
+        sectionFrustumHeight * Math.exp(event.deltaY * 0.001),
+        SECTION_MIN_FRUSTUM_HEIGHT,
+        SECTION_MAX_FRUSTUM_HEIGHT
+      );
+      updateSectionFrustum();
+    }
+
+    function sectionDoubleClick() {
+      if (!sectionControlsEnabled) return;
+      resetSectionCamera();
+    }
+
+    function sectionTouchStart(event) {
+      if (!sectionControlsEnabled) return;
+      if (event.touches.length === 1) {
+        sectionTouchMode = "rotate";
+        sectionLastX = event.touches[0].clientX;
+        sectionLastY = event.touches[0].clientY;
+      } else if (event.touches.length >= 2) {
+        sectionTouchMode = "pinch";
+        sectionPinchDistance = touchDistance(event.touches);
+      }
+      event.preventDefault();
+    }
+
+    function sectionTouchMove(event) {
+      if (!sectionControlsEnabled) return;
+      if (event.touches.length === 1 && sectionTouchMode === "rotate") {
+        const deltaX = event.touches[0].clientX - sectionLastX;
+        const deltaY = event.touches[0].clientY - sectionLastY;
+        sectionLastX = event.touches[0].clientX;
+        sectionLastY = event.touches[0].clientY;
+        rotateSectionCamera(deltaX, deltaY);
+      } else if (event.touches.length >= 2) {
+        const distance = touchDistance(event.touches);
+        if (sectionPinchDistance > 0 && distance > 0) {
+          sectionFrustumHeight = sectionClamp(
+            sectionFrustumHeight * sectionPinchDistance / distance,
+            SECTION_MIN_FRUSTUM_HEIGHT,
+            SECTION_MAX_FRUSTUM_HEIGHT
+          );
+          updateSectionFrustum();
+        }
+        sectionPinchDistance = distance;
+      }
+      event.preventDefault();
+    }
+
+    function sectionTouchEnd(event) {
+      if (!sectionControlsEnabled) return;
+      if (event.touches.length === 1) {
+        sectionTouchMode = "rotate";
+        sectionLastX = event.touches[0].clientX;
+        sectionLastY = event.touches[0].clientY;
+      } else {
+        sectionTouchMode = "none";
+        sectionPinchDistance = 0;
+      }
+    }
+
+    renderer.domElement.addEventListener("pointerdown", sectionPointerDown);
+    renderer.domElement.addEventListener("pointermove", sectionPointerMove);
+    renderer.domElement.addEventListener("pointerup", sectionPointerUp);
+    renderer.domElement.addEventListener("pointercancel", sectionPointerUp);
+    renderer.domElement.addEventListener("wheel", sectionWheel, { passive: false });
+    renderer.domElement.addEventListener("dblclick", sectionDoubleClick);
+    renderer.domElement.addEventListener("touchstart", sectionTouchStart, { passive: false });
+    renderer.domElement.addEventListener("touchmove", sectionTouchMove, { passive: false });
+    renderer.domElement.addEventListener("touchend", sectionTouchEnd);
+    renderer.domElement.addEventListener("touchcancel", sectionTouchEnd);
+    if (sectionResetView) sectionResetView.addEventListener("click", resetSectionCamera);
+
     function resize() {
       const width = Math.max(container.clientWidth, 1);
       const height = Math.max(container.clientHeight, 1);
@@ -438,14 +641,7 @@
       renderer.setSize(width, height, false);
       camera.aspect = aspect;
       camera.updateProjectionMatrix();
-
-      const halfHeight = SECTION_VIEW_HEIGHT / 2;
-      const halfWidth = halfHeight * aspect;
-      sectionCamera.left = -halfWidth;
-      sectionCamera.right = halfWidth;
-      sectionCamera.top = halfHeight;
-      sectionCamera.bottom = -halfHeight;
-      sectionCamera.updateProjectionMatrix();
+      updateSectionFrustum();
     }
 
     window.addEventListener("resize", resize);
@@ -706,7 +902,17 @@
       });
 
       const section = view === "section";
+      sectionControlsEnabled = section;
+      controls.enabled = !section;
+      if (sectionResetView) sectionResetView.hidden = !section;
+      if (!section) {
+        sectionDragging = false;
+        sectionTouchMode = "none";
+        sectionPinchDistance = 0;
+      }
+
       setSectionClipping(section);
+      if (section) updateSectionClipPlane();
       activeCamera = section ? sectionCamera : camera;
 
       if (!section) {
