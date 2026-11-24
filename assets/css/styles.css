@@ -1817,6 +1817,7 @@ body.simulation-page {
 
 .simulation-page .panel-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -1862,6 +1863,7 @@ body.simulation-page {
 
 .simulation-page .readout-item {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: 6px;
@@ -1873,7 +1875,7 @@ body.simulation-page {
 
 .simulation-page .readout-item > span:first-child {
   color: var(--muted);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .simulation-page .readout-value {

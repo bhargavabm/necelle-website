@@ -88,9 +88,7 @@
         <div class="readout-item"><span>Wind direction</span><span class="readout-value"><output id="readout-wind-direction">100</output><span class="readout-unit">deg</span></span></div>
         <div class="readout-item"><span>Nacelle heading</span><span class="readout-value"><output id="readout-heading">0</output><span class="readout-unit">deg</span></span></div>
         <div class="readout-item"><span>Misalignment</span><span class="readout-value"><output id="readout-misalignment">0</output><span class="readout-unit">deg</span></span></div>
-        <div class="readout-item"><span>Yaw command</span><span class="readout-value"><output id="readout-yaw-command">0.00</output><span class="readout-unit">deg/s</span></span></div>
         <div class="readout-item"><span>Yaw rate</span><span class="readout-value"><output id="readout-yaw-rate">0.0</output><span class="readout-unit">deg/s</span></span></div>
-        <div class="readout-item"><span>Motor state</span><span class="readout-value"><output id="readout-motor-state">OFF</output></span></div>
         <div class="readout-item"><span>Rotor rpm</span><span class="readout-value"><output id="readout-rotor-rpm">0.0</output></span></div>
         <div class="readout-item"><span>Generator rpm</span><span class="readout-value"><output id="readout-generator-rpm">0.0</output></span></div>
         <div class="readout-item"><span>Power</span><span class="readout-value"><output id="readout-power">0</output><span class="readout-unit">%</span></span></div>
@@ -156,17 +154,14 @@
             <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Kp</span><span class="slider-value"><output id="kp-value" for="kp">1.2</output><span class="slider-unit">gain</span></span></div>
               <input type="range" id="kp" data-param="kp" min="0" max="3" step="0.1" value="1.2">
-              <div class="slider-ticks"><span>0</span><span>3</span></div>
             </div>
             <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Kd</span><span class="slider-value"><output id="kd-value" for="kd">0.6</output><span class="slider-unit">gain</span></span></div>
               <input type="range" id="kd" data-param="kd" min="0" max="2" step="0.05" value="0.6">
-              <div class="slider-ticks"><span>0</span><span>2</span></div>
             </div>
             <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Deadband</span><span class="slider-value"><output id="deadband-value" for="deadband">0.5</output><span class="slider-unit">deg</span></span></div>
               <input type="range" id="deadband" data-param="deadband" min="0" max="3" step="0.1" value="0.5">
-              <div class="slider-ticks"><span>0</span><span>3</span></div>
             </div>
           </section>
 
@@ -175,17 +170,14 @@
             <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Motor lag</span><span class="slider-value"><output id="lag-value" for="lag">0.3</output><span class="slider-unit">s</span></span></div>
               <input type="range" id="lag" data-param="lag" min="0.05" max="2" step="0.05" value="0.3">
-              <div class="slider-ticks"><span>0.05</span><span>2</span></div>
             </div>
             <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Sensor noise</span><span class="slider-value"><output id="noise-value" for="noise">1.5</output><span class="slider-unit">deg</span></span></div>
               <input type="range" id="noise" data-param="noise" min="0" max="10" step="0.1" value="1.5">
-              <div class="slider-ticks"><span>0</span><span>10</span></div>
             </div>
             <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Sensor delay</span><span class="slider-value"><output id="delay-value" for="delay">0.4</output><span class="slider-unit">s</span></span></div>
               <input type="range" id="delay" data-param="delay" min="0" max="2" step="0.05" value="0.4">
-              <div class="slider-ticks"><span>0</span><span>2</span></div>
             </div>
           </section>
 
@@ -194,13 +186,11 @@
             <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Wind direction</span><span class="slider-value"><output id="windDirection-value" for="windDirection">100</output> <span class="slider-unit">deg</span></span></div>
               <input type="range" id="windDirection" min="0" max="359" step="1" value="100">
-              <div class="slider-ticks"><span>0</span><span>359</span></div>
             </div>
             <p class="wind-arrow-key">Arrows show the direction the wind comes from.</p>
             <div class="slider-control">
               <div class="slider-line"><span class="slider-label">Wind speed</span><span class="slider-value"><output id="windSpeed-value" for="windSpeed">12</output><span class="slider-unit">m/s</span></span></div>
               <input type="range" id="windSpeed" data-param="windSpeed" min="3" max="25" step="0.5" value="12">
-              <div class="slider-ticks"><span>3</span><span>25</span></div>
             </div>
           </section>
         </div>

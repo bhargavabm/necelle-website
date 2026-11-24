@@ -961,9 +961,7 @@
     const readoutWindDirection = document.getElementById("readout-wind-direction");
     const readoutHeading = document.getElementById("readout-heading");
     const readoutMisalignment = document.getElementById("readout-misalignment");
-    const readoutYawCommand = document.getElementById("readout-yaw-command");
     const readoutYawRate = document.getElementById("readout-yaw-rate");
-    const readoutMotorState = document.getElementById("readout-motor-state");
     const readoutRotorRpm = document.getElementById("readout-rotor-rpm");
     const readoutGeneratorRpm = document.getElementById("readout-generator-rpm");
     const readoutPower = document.getElementById("readout-power");
@@ -1103,9 +1101,7 @@
       readoutWindDirection.textContent = String(Math.round(state.trueWindDirection));
       readoutHeading.textContent = String(Math.round(state.heading));
       readoutMisalignment.textContent = String(Math.round(error));
-      readoutYawCommand.textContent = state.yawCommand.toFixed(2);
       readoutYawRate.textContent = state.yawRate.toFixed(1);
-      readoutMotorState.textContent = motorOn ? "ON" : "OFF";
       readoutRotorRpm.textContent = rotorRpm().toFixed(1);
       readoutGeneratorRpm.textContent = (rotorRpm() * GEAR_RATIO).toFixed(0);
       readoutPower.textContent = String(Math.round(state.power));
