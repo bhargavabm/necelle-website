@@ -623,11 +623,9 @@
     const simulationScene = document.getElementById("simulation-scene");
     const sectionWindLabel = document.getElementById("section-wind-label");
     const sectionWindLayer = document.getElementById("section-wind-layer");
-    const sectionNacelle = document.getElementById("section-nacelle");
     const sectionRotor = document.getElementById("section-rotor");
+    const sectionBlades = document.getElementById("section-blades");
     const sectionShaft = document.getElementById("section-shaft");
-    const sectionBottomSpokes = document.getElementById("section-bottom-spokes");
-    const sectionGeneratorSpokes = document.getElementById("section-generator-spokes");
     const readoutWindSpeed = document.getElementById("readout-wind-speed");
     const readoutWindDirection = document.getElementById("readout-wind-direction");
     const readoutHeading = document.getElementById("readout-heading");
@@ -641,7 +639,6 @@
 
     const sectionState = {
       rotorAngle: 0,
-      generatorAngle: 0,
       shaftOffset: 0,
       windPhase: 0
     };
@@ -710,21 +707,17 @@
 
     function updateSection(dt) {
       const rpm = rotorRpm();
-      const generatorRpm = rpm * GEAR_RATIO;
       const rotorRadians = rpm * Math.PI / 30;
 
       sectionState.rotorAngle = (sectionState.rotorAngle + rotorRadians * dt) % (Math.PI * 2);
-      sectionState.generatorAngle = (sectionState.generatorAngle + rotorRadians * GEAR_RATIO * dt) % (Math.PI * 2);
       sectionState.shaftOffset = (sectionState.shaftOffset + rotorRadians * 18 * dt) % 40;
       sectionState.windPhase = (sectionState.windPhase + (state.params.windSpeed / 12) * dt * 0.22) % 1;
 
       const rotorDegrees = (sectionState.rotorAngle * 180) / Math.PI;
-      const generatorDegrees = (sectionState.generatorAngle * 180) / Math.PI;
-      sectionRotor.setAttribute("transform", "translate(575 168) rotate(" + rotorDegrees.toFixed(2) + ")");
-      sectionBottomSpokes.setAttribute("transform", "rotate(" + rotorDegrees.toFixed(2) + ")");
-      sectionGeneratorSpokes.setAttribute("transform", "rotate(" + generatorDegrees.toFixed(2) + ")");
+      const nacelleHeadingDegrees = -state.heading;
+      sectionRotor.setAttribute("transform", "translate(575 168) rotate(" + nacelleHeadingDegrees.toFixed(2) + ")");
+      sectionBlades.setAttribute("transform", "rotate(" + rotorDegrees.toFixed(2) + ")");
       sectionShaft.setAttribute("stroke-dashoffset", (-sectionState.shaftOffset).toFixed(2));
-      sectionNacelle.setAttribute("transform", "rotate(" + (-state.heading).toFixed(2) + " 450 168)");
 
       const windDirection = wrapDegrees(state.trueWindDirection + gustAngle());
       const windAngle = (windDirection - 90) * DEG_TO_RAD;
