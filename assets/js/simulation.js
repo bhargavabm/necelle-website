@@ -61,6 +61,7 @@
 
   function start(THREE) {
     const container = document.getElementById("scene-container");
+    const sectionScale = document.getElementById("section-scale");
     if (!container) return;
 
     // SCENE
@@ -389,6 +390,13 @@
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
+
+      if (sectionScale) {
+        const bounds = container.getBoundingClientRect();
+        const scale = Math.max(0, (bounds.width - 2) / 1000);
+        const offsetY = 1 + Math.max(0, (bounds.height - 2 - 640 * scale) / 2);
+        sectionScale.style.transform = "translate(1px, " + offsetY.toFixed(2) + "px) scale(" + scale.toFixed(6) + ")";
+      }
     }
 
     window.addEventListener("resize", resize);
@@ -622,10 +630,8 @@
     const viewButtons = Array.from(document.querySelectorAll(".view-button"));
     const simulationScene = document.getElementById("simulation-scene");
     const sectionWindLabel = document.getElementById("section-wind-label");
-    const sectionWindLayer = document.getElementById("section-wind-layer");
     const sectionRotor = document.getElementById("section-rotor");
     const sectionBlades = document.getElementById("section-blades");
-    const sectionShaft = document.getElementById("section-shaft");
     const readoutWindSpeed = document.getElementById("readout-wind-speed");
     const readoutWindDirection = document.getElementById("readout-wind-direction");
     const readoutHeading = document.getElementById("readout-heading");
@@ -638,38 +644,8 @@
     const readoutPower = document.getElementById("readout-power");
 
     const sectionState = {
-      rotorAngle: 0,
-      shaftOffset: 0,
-      windPhase: 0
+      rotorAngle: 0
     };
-
-    const svgNamespace = "http://www.w3.org/2000/svg";
-    const windArrows = [];
-
-    for (let i = 0; i < 6; i += 1) {
-      const arrow = document.createElementNS(svgNamespace, "g");
-      const line = document.createElementNS(svgNamespace, "line");
-      const head = document.createElementNS(svgNamespace, "polygon");
-      line.setAttribute("x1", "-18");
-      line.setAttribute("y1", "0");
-      line.setAttribute("x2", "18");
-      line.setAttribute("y2", "0");
-      line.setAttribute("fill", "none");
-      line.setAttribute("stroke", "var(--accent)");
-      line.setAttribute("stroke-width", "2");
-      head.setAttribute("points", "18,0 8,-6 8,6");
-      head.setAttribute("fill", "var(--accent)");
-      head.setAttribute("stroke", "var(--accent)");
-      head.setAttribute("stroke-width", "2");
-      arrow.setAttribute("class", "wind-arrow");
-      arrow.setAttribute("fill", "var(--accent)");
-      arrow.setAttribute("stroke", "var(--accent)");
-      arrow.setAttribute("stroke-width", "2");
-      arrow.appendChild(line);
-      arrow.appendChild(head);
-      sectionWindLayer.appendChild(arrow);
-      windArrows.push(arrow);
-    }
 
     const cameraPresets = {
       "3d": new THREE.Vector3(72, 52, 118),
@@ -705,36 +681,17 @@
       return ROTOR_RPM_AT_REF * (state.params.windSpeed / 12) * powerFraction;
     }
 
-    function updateSection(dt) {
+    function updateHtmlSection(dt) {
       const rpm = rotorRpm();
       const rotorRadians = rpm * Math.PI / 30;
 
       sectionState.rotorAngle = (sectionState.rotorAngle + rotorRadians * dt) % (Math.PI * 2);
-      sectionState.shaftOffset = (sectionState.shaftOffset + rotorRadians * 18 * dt) % 40;
-      sectionState.windPhase = (sectionState.windPhase + (state.params.windSpeed / 12) * dt * 0.22) % 1;
 
       const rotorDegrees = (sectionState.rotorAngle * 180) / Math.PI;
-      const nacelleHeadingDegrees = -state.heading;
-      sectionRotor.setAttribute("transform", "translate(575 168) rotate(" + nacelleHeadingDegrees.toFixed(2) + ")");
-      sectionBlades.setAttribute("transform", "rotate(" + rotorDegrees.toFixed(2) + ")");
-      sectionShaft.setAttribute("stroke-dashoffset", (-sectionState.shaftOffset).toFixed(2));
+      sectionRotor.style.transform = "translate(-50%, -50%) rotate(" + (-state.heading).toFixed(2) + "deg)";
+      sectionBlades.style.transform = "rotate(" + rotorDegrees.toFixed(2) + "deg)";
 
       const windDirection = wrapDegrees(state.trueWindDirection + gustAngle());
-      const windAngle = (windDirection - 90) * DEG_TO_RAD;
-      const fromX = Math.cos(windAngle);
-      const fromY = Math.sin(windAngle);
-      const travelAngle = (Math.atan2(-fromY, -fromX) * 180) / Math.PI;
-
-      windArrows.forEach(function (arrow, index) {
-        const progress = (sectionState.windPhase + index / windArrows.length) % 1;
-        const distance = 280 - progress * 240;
-        const offset = ((index % 3) - 1) * 22;
-        const x = 575 + fromX * distance - fromY * offset;
-        const y = 168 + fromY * distance + fromX * offset;
-        arrow.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ") rotate(" + travelAngle.toFixed(1) + ")");
-        arrow.setAttribute("opacity", (0.35 + 0.65 * (1 - progress)).toFixed(2));
-      });
-
       const windText = state.params.windSpeed.toFixed(1) + " m/s from " + Math.round(windDirection) + "°";
       sectionWindLabel.textContent = "Wind " + windText;
     }
@@ -1045,7 +1002,7 @@
       }
 
       sampleHistory();
-      updateSection(frameTime);
+      updateHtmlSection(frameTime);
       updateWorkflow(frameTime);
       updateCharts();
       controls.update();

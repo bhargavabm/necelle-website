@@ -38,51 +38,32 @@
 
         <div class="scene-shell" id="simulation-scene" aria-label="Wind turbine scene">
           <div class="scene-container" id="scene-container" role="region" aria-label="Interactive wind turbine model">
-            <svg class="section-view" id="section-svg" viewBox="0 0 900 620" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" fill="none" stroke="none" aria-hidden="true">
-              <g id="section-wind-layer" fill="none" stroke="none"></g>
-              <line x1="80" y1="578" x2="820" y2="578" fill="none" stroke="var(--border)" stroke-width="2"/>
-              <line x1="450" y1="120" x2="450" y2="578" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="8 6"/>
-              <g id="section-tower" fill="none" stroke="none">
-                <polygon points="400,560 500,560 470,220 430,220" fill="var(--surface)" stroke="var(--border)" stroke-width="3"/>
-                <polygon points="425,550 475,550 458,220 442,220" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/>
-                <rect x="360" y="560" width="180" height="18" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
-              </g>
-              <line id="section-shaft" x1="450" y1="180" x2="450" y2="560" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square" stroke-dasharray="8 6"/>
-              <g id="section-nacelle" fill="none" stroke="none">
-                <ellipse cx="450" cy="206" rx="100" ry="14" fill="var(--surface)" stroke="var(--accent)" stroke-width="3"/>
-                <rect x="360" y="140" width="180" height="56" fill="var(--muted)" stroke="var(--border)" stroke-width="3"/>
-                <rect x="392" y="150" width="54" height="34" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
-                <line x1="540" y1="168" x2="575" y2="168" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square"/>
-                <g id="section-rotor" transform="translate(575 168)" fill="none" stroke="none">
-                  <line x1="-14" y1="0" x2="14" y2="0" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square"/>
-                  <g id="section-blades" fill="none" stroke="none">
-                    <line x1="0" y1="0" x2="0" y2="-90" fill="none" stroke="var(--text)" stroke-width="4" stroke-linecap="square"/>
-                    <line x1="0" y1="0" x2="78" y2="45" fill="none" stroke="var(--text)" stroke-width="4" stroke-linecap="square"/>
-                    <line x1="0" y1="0" x2="-78" y2="45" fill="none" stroke="var(--text)" stroke-width="4" stroke-linecap="square"/>
-                  </g>
-                  <circle cx="0" cy="0" r="14" fill="var(--text)" stroke="var(--border)" stroke-width="3"/>
-                </g>
-              </g>
-              <g id="section-bottom-hub" transform="translate(450 560)" fill="none" stroke="none">
-                <circle cx="0" cy="0" r="18" fill="var(--text)" stroke="var(--border)" stroke-width="3"/>
-                <g id="section-bottom-spokes" fill="none" stroke="none">
-                  <line x1="-14" y1="0" x2="14" y2="0" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square"/>
-                  <line x1="0" y1="-14" x2="0" y2="14" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square"/>
-                </g>
-              </g>
-              <line x1="468" y1="560" x2="490" y2="560" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square"/>
-              <rect x="490" y="535" width="70" height="50" fill="var(--surface)" stroke="var(--border)" stroke-width="3"/>
-              <circle cx="525" cy="560" r="12" fill="none" stroke="var(--accent)" stroke-width="3"/>
-              <line x1="560" y1="560" x2="580" y2="560" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square"/>
-              <rect x="580" y="520" width="120" height="80" fill="var(--surface)" stroke="var(--border)" stroke-width="3"/>
-              <g id="section-generator" transform="translate(640 560)" fill="none" stroke="none">
-                <circle cx="0" cy="0" r="24" fill="var(--text)" stroke="var(--border)" stroke-width="3"/>
-                <g id="section-generator-spokes" fill="none" stroke="none">
-                  <line x1="-18" y1="0" x2="18" y2="0" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square"/>
-                  <line x1="0" y1="-18" x2="0" y2="18" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="square"/>
-                </g>
-              </g>
-            </svg>
+            <div class="section-view" id="section-view" aria-hidden="true">
+              <div class="section-scale" id="section-scale">
+                <div class="section-ground" id="section-ground"></div>
+                <div class="section-foundation" id="section-foundation"></div>
+                <div class="section-tower" id="section-tower"></div>
+                <div class="section-yaw-bearing" id="section-yaw-bearing"></div>
+                <div class="section-nacelle" id="section-nacelle">
+                  <div class="section-nacelle-window"></div>
+                </div>
+                <div class="section-upper-shaft" id="section-upper-shaft"></div>
+                <div class="section-vertical-shaft" id="section-vertical-shaft"></div>
+                <div class="section-rotor" id="section-rotor">
+                  <div class="section-blades" id="section-blades">
+                    <span class="section-blade blade-0"></span>
+                    <span class="section-blade blade-120"></span>
+                    <span class="section-blade blade-240"></span>
+                  </div>
+                  <div class="section-hub" id="section-hub"></div>
+                </div>
+                <div class="section-bottom-shaft" id="section-bottom-shaft"></div>
+                <div class="section-bottom-hub" id="section-bottom-hub"></div>
+                <div class="section-gearbox" id="section-gearbox"></div>
+                <div class="section-drive-coupler" id="section-drive-coupler"></div>
+                <div class="section-generator" id="section-generator"></div>
+              </div>
+            </div>
           </div>
         </div>
 
