@@ -61,7 +61,6 @@
 
   function start(THREE) {
     const container = document.getElementById("scene-container");
-    const sectionScale = document.getElementById("section-scale");
     if (!container) return;
 
     // SCENE
@@ -120,6 +119,7 @@
     scene.add(ground);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.localClippingEnabled = true;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -287,9 +287,56 @@
       rotor.add(pivot);
     }
 
+    const nacelleShaft = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, rotor.position.z, 16), accentMaterial));
+    nacelleShaft.rotation.x = Math.PI / 2;
+    nacelleShaft.position.set(0, nacelleY, rotor.position.z / 2);
+    yawAssembly.add(nacelleShaft);
+
+    const verticalShaftBottomY = PAD_HEIGHT - towerTopY;
+    const verticalShaftHeight = nacelleY - verticalShaftBottomY;
+    const verticalShaft = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, verticalShaftHeight, 16), accentMaterial));
+    verticalShaft.position.y = (nacelleY + verticalShaftBottomY) / 2;
+    yawAssembly.add(verticalShaft);
+
+    const bottomHub = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 1.4, 24), steelMaterial));
+    bottomHub.rotation.z = Math.PI / 2;
+    bottomHub.position.y = PAD_HEIGHT + 2 - towerTopY;
+    yawAssembly.add(bottomHub);
+
+    const gearbox = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.2, 2.6), darkMaterial));
+    gearbox.position.y = PAD_HEIGHT + 4 - towerTopY;
+    yawAssembly.add(gearbox);
+
+    const generator = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 3.2, 24), cabinetMaterial));
+    generator.rotation.z = Math.PI / 2;
+    generator.position.y = PAD_HEIGHT + 7 - towerTopY;
+    yawAssembly.add(generator);
+
     // CAMERA
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 2000);
     camera.position.set(72, 52, 118);
+
+    const SECTION_VIEW_HEIGHT = 160;
+    const sectionCamera = new THREE.OrthographicCamera(-80, 80, 80, -80, 0.1, 2000);
+    sectionCamera.position.set(190, 60, 0);
+    sectionCamera.lookAt(0, 38, 0);
+    const sectionClipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
+    let activeCamera = camera;
+
+    function setSectionClipping(enabled) {
+      steelMaterial.clippingPlanes = enabled ? [sectionClipPlane] : [];
+      steelMaterial.clipShadows = enabled;
+      steelMaterial.needsUpdate = true;
+    }
+
+    window.simulationDebug = {
+      scene: scene,
+      renderer: renderer,
+      tower: tower,
+      yawAssembly: yawAssembly,
+      rotor: rotor,
+      get activeCamera() { return activeCamera; }
+    };
 
     class OrbitControls {
       constructor(cameraInstance, domElement) {
@@ -387,16 +434,18 @@
     function resize() {
       const width = Math.max(container.clientWidth, 1);
       const height = Math.max(container.clientHeight, 1);
+      const aspect = width / height;
       renderer.setSize(width, height, false);
-      camera.aspect = width / height;
+      camera.aspect = aspect;
       camera.updateProjectionMatrix();
 
-      if (sectionScale) {
-        const bounds = container.getBoundingClientRect();
-        const scale = Math.max(0, (bounds.width - 2) / 1000);
-        const offsetY = 1 + Math.max(0, (bounds.height - 2 - 640 * scale) / 2);
-        sectionScale.style.transform = "translate(1px, " + offsetY.toFixed(2) + "px) scale(" + scale.toFixed(6) + ")";
-      }
+      const halfHeight = SECTION_VIEW_HEIGHT / 2;
+      const halfWidth = halfHeight * aspect;
+      sectionCamera.left = -halfWidth;
+      sectionCamera.right = halfWidth;
+      sectionCamera.top = halfHeight;
+      sectionCamera.bottom = -halfHeight;
+      sectionCamera.updateProjectionMatrix();
     }
 
     window.addEventListener("resize", resize);
@@ -630,8 +679,6 @@
     const viewButtons = Array.from(document.querySelectorAll(".view-button"));
     const simulationScene = document.getElementById("simulation-scene");
     const sectionWindLabel = document.getElementById("section-wind-label");
-    const sectionRotor = document.getElementById("section-rotor");
-    const sectionBlades = document.getElementById("section-blades");
     const readoutWindSpeed = document.getElementById("readout-wind-speed");
     const readoutWindDirection = document.getElementById("readout-wind-direction");
     const readoutHeading = document.getElementById("readout-heading");
@@ -642,10 +689,6 @@
     const readoutRotorRpm = document.getElementById("readout-rotor-rpm");
     const readoutGeneratorRpm = document.getElementById("readout-generator-rpm");
     const readoutPower = document.getElementById("readout-power");
-
-    const sectionState = {
-      rotorAngle: 0
-    };
 
     const cameraPresets = {
       "3d": new THREE.Vector3(72, 52, 118),
@@ -662,8 +705,12 @@
         button.setAttribute("aria-pressed", String(active));
       });
 
-      const preset = cameraPresets[view];
-      if (preset) {
+      const section = view === "section";
+      setSectionClipping(section);
+      activeCamera = section ? sectionCamera : camera;
+
+      if (!section) {
+        const preset = cameraPresets[view] || cameraPresets["3d"];
         camera.position.copy(preset);
         controls.target.set(0, 35, 0);
         controls.update();
@@ -681,16 +728,7 @@
       return ROTOR_RPM_AT_REF * (state.params.windSpeed / 12) * powerFraction;
     }
 
-    function updateHtmlSection(dt) {
-      const rpm = rotorRpm();
-      const rotorRadians = rpm * Math.PI / 30;
-
-      sectionState.rotorAngle = (sectionState.rotorAngle + rotorRadians * dt) % (Math.PI * 2);
-
-      const rotorDegrees = (sectionState.rotorAngle * 180) / Math.PI;
-      sectionRotor.style.transform = "translate(-50%, -50%) rotate(" + (-state.heading).toFixed(2) + "deg)";
-      sectionBlades.style.transform = "rotate(" + rotorDegrees.toFixed(2) + "deg)";
-
+    function updateWindCaption() {
       const windDirection = wrapDegrees(state.trueWindDirection + gustAngle());
       const windText = state.params.windSpeed.toFixed(1) + " m/s from " + Math.round(windDirection) + "°";
       sectionWindLabel.textContent = "Wind " + windText;
@@ -1002,11 +1040,11 @@
       }
 
       sampleHistory();
-      updateHtmlSection(frameTime);
+      updateWindCaption();
       updateWorkflow(frameTime);
       updateCharts();
       controls.update();
-      renderer.render(scene, camera);
+      renderer.render(scene, activeCamera);
     }
 
     requestAnimationFrame(animate);

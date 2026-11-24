@@ -11,7 +11,6 @@
   --turning: #f59e0b;
   --fault: #ef4444;
   --neutral: #94a3b8;
-  --tower: #64748b;
   --space-1: 8px;
   --space-2: 16px;
   --space-3: 24px;
@@ -287,7 +286,6 @@ textarea:disabled {
 .panel,
 .workflow-panel,
 .chart-card,
-.section-view,
 .control-group {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -520,8 +518,7 @@ textarea:disabled {
   min-width: 0;
 }
 
-.scene-shell > .scene-container,
-.scene-shell > .section-view {
+.scene-shell > .scene-container {
   grid-area: 1 / 1;
   position: relative;
   width: 100%;
@@ -813,30 +810,6 @@ textarea:disabled {
   color: var(--muted);
   font-size: 14px;
   font-variant-numeric: tabular-nums;
-}
-
-.section-view {
-  display: block;
-  visibility: hidden;
-  pointer-events: none;
-  padding: 0;
-}
-
-.scene-shell[data-view="section"] .scene-container {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.scene-shell[data-view="section"] .section-view {
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.section-view svg {
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 100%;
 }
 
 .contact-form {
@@ -1240,8 +1213,7 @@ body.simulation-page {
   background: var(--bg);
 }
 
-.simulation-page .scene-shell > .scene-container,
-.simulation-page .scene-shell > .section-view {
+.simulation-page .scene-shell > .scene-container {
   grid-area: 1 / 1;
   position: relative;
   width: 100%;
@@ -1252,28 +1224,6 @@ body.simulation-page {
 }
 
 .simulation-page .scene-container canvas {
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.simulation-page .section-view {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.simulation-page .scene-shell[data-view="section"] .scene-container {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.simulation-page .scene-shell[data-view="section"] .section-view {
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.simulation-page .section-view svg {
   display: block;
   position: relative;
   width: 100%;
@@ -1772,10 +1722,6 @@ body.simulation-page {
   height: 100%;
 }
 
-.simulation-page .section-view {
-  display: none !important;
-}
-
 .simulation-page .graphs-grid {
   display: grid;
   grid-template-rows: repeat(3, minmax(0, 1fr));
@@ -2238,223 +2184,3 @@ body.simulation-page {
   z-index: 1;
 }
 
-.simulation-page .section-view {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: none !important;
-  visibility: hidden;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.simulation-page .scene-shell[data-view="section"] .scene-container,
-.simulation-page .scene-shell[data-view="section"] .scene-container canvas {
-  visibility: visible;
-}
-
-.simulation-page .scene-shell[data-view="section"] .scene-container canvas {
-  visibility: hidden;
-}
-
-.simulation-page .scene-shell[data-view="section"] .section-view {
-  display: block !important;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.section-view * {
-  box-sizing: border-box;
-}
-
-.section-scale {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1000px;
-  height: 640px;
-  transform-origin: 0 0;
-}
-
-.section-ground {
-  position: absolute;
-  left: 60px;
-  top: 560px;
-  width: 880px;
-  height: 1px;
-  background: var(--border);
-}
-
-.section-foundation {
-  position: absolute;
-  left: 380px;
-  top: 548px;
-  width: 240px;
-  height: 12px;
-  background: var(--border);
-}
-
-.section-tower {
-  position: absolute;
-  left: 410px;
-  top: 236px;
-  width: 180px;
-  height: 312px;
-  background: var(--tower);
-  clip-path: polygon(40px 0, 140px 0, 180px 100%, 0 100%);
-}
-
-.section-yaw-bearing {
-  position: absolute;
-  left: 440px;
-  top: 222px;
-  width: 120px;
-  height: 14px;
-  border: 1px solid var(--accent);
-  border-radius: 4px;
-  background: var(--muted);
-}
-
-.section-nacelle {
-  position: absolute;
-  left: 380px;
-  top: 130px;
-  width: 240px;
-  height: 90px;
-  border: 2px solid var(--border);
-  border-radius: 4px;
-  background: var(--muted);
-}
-
-.section-nacelle-window {
-  position: absolute;
-  left: 24px;
-  top: 22px;
-  width: 84px;
-  height: 46px;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  background: var(--surface);
-}
-
-.section-upper-shaft {
-  position: absolute;
-  left: 500px;
-  top: 175px;
-  width: 120px;
-  height: 3px;
-  background: var(--accent);
-}
-
-.section-vertical-shaft {
-  position: absolute;
-  left: 500px;
-  top: 175px;
-  width: 3px;
-  height: 373px;
-  border-left: 3px dashed var(--accent);
-}
-
-.section-rotor {
-  position: absolute;
-  left: 620px;
-  top: 175px;
-  width: 22px;
-  height: 22px;
-  transform: translate(-50%, -50%);
-  transform-origin: 50% 50%;
-}
-
-.section-blades {
-  position: absolute;
-  inset: 0;
-  transform-origin: 50% 50%;
-}
-
-.section-blade {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 150px;
-  height: 8px;
-  margin-top: -4px;
-  border-radius: 2px;
-  background: var(--text);
-  transform-origin: 0 50%;
-}
-
-.blade-0 {
-  transform: rotate(0deg);
-}
-
-.blade-120 {
-  transform: rotate(120deg);
-}
-
-.blade-240 {
-  transform: rotate(240deg);
-}
-
-.section-hub {
-  position: absolute;
-  inset: 0;
-  border: 2px solid var(--border);
-  border-radius: 50%;
-  background: var(--text);
-}
-
-.section-bottom-shaft {
-  position: absolute;
-  left: 470px;
-  top: 548px;
-  width: 30px;
-  height: 4px;
-  background: var(--accent);
-}
-
-.section-bottom-hub {
-  position: absolute;
-  left: 470px;
-  top: 540px;
-  width: 36px;
-  height: 36px;
-  border: 2px solid var(--border);
-  border-radius: 50%;
-  background: var(--text);
-  transform: translate(-50%, -50%);
-}
-
-.section-gearbox {
-  position: absolute;
-  left: 520px;
-  top: 535px;
-  width: 70px;
-  height: 50px;
-  border: 2px solid var(--border);
-  border-radius: 3px;
-  background: var(--surface);
-}
-
-.section-drive-coupler {
-  position: absolute;
-  left: 590px;
-  top: 558px;
-  width: 20px;
-  height: 4px;
-  background: var(--accent);
-}
-
-.section-generator {
-  position: absolute;
-  left: 610px;
-  top: 520px;
-  width: 100px;
-  height: 80px;
-  border: 2px solid var(--border);
-  border-radius: 3px;
-  background: var(--surface);
-}
