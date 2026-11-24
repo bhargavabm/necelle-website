@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simulation of the Automated Nacelle Alignment System yaw controller.">
+  <title>Automated Nacelle Alignment System</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.6.1/chart.umd.min.js"></script>
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/simulation.js" defer></script>
+</head>
+<body class="simulation-page">
+  <header class="top-bar" id="top-bar">
+    <h1>Simulation</h1>
+    <div class="view-toolbar" role="group" aria-label="View mode">
+      <button type="button" class="view-button is-active" data-view="3d" aria-pressed="true">3D</button>
+      <button type="button" class="view-button" data-view="top" aria-pressed="false">Top</button>
+      <button type="button" class="view-button" data-view="front" aria-pressed="false">Front</button>
+      <button type="button" class="view-button" data-view="side" aria-pressed="false">Side</button>
+    </div>
+  </header>
+
+  <main class="scene-panel" id="scene-panel">
+    <div class="panel-tabs" role="tablist" aria-label="Turbine panel tabs">
+      <button type="button" class="tab-button" id="tab-turbine" role="tab" aria-selected="true" aria-controls="tabpanel-turbine" tabindex="0">Turbine</button>
+      <button type="button" class="tab-button" id="tab-output" role="tab" aria-selected="false" aria-controls="tabpanel-output" tabindex="-1">Output</button>
+    </div>
+
+    <section class="tab-content" id="tabpanel-turbine" role="tabpanel" aria-labelledby="tab-turbine">
+      <div class="wind-caption">
+        <span id="section-wind-label">Wind 12.0 m/s from 100°</span>
+      </div>
+
+      <div class="scene-shell" id="simulation-scene" aria-label="3D wind turbine scene">
+        <div class="scene-container" id="scene-container" role="region" aria-label="Interactive 3D wind turbine model"></div>
+        <div class="section-view" id="section-view" aria-hidden="true">
+          <svg id="section-svg" viewBox="0 0 900 620" width="100%" preserveAspectRatio="xMidYMid meet" fill="none" stroke="none">
+            <g id="section-wind-layer" fill="none" stroke="none"></g>
+            <line x1="80" y1="578" x2="820" y2="578" fill="none" stroke="#94a3b8" stroke-width="2"/>
+            <polygon points="400,560 500,560 470,210 430,210" fill="#94a3b8" stroke="#1f2d46" stroke-width="3"/>
+            <polygon points="425,550 475,550 458,220 442,220" fill="#0b1220" stroke="#22d3ee" stroke-width="2"/>
+            <line x1="450" y1="190" x2="450" y2="560" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="8 6"/>
+            <rect x="360" y="560" width="180" height="18" fill="#94a3b8" stroke="#1f2d46" stroke-width="2"/>
+            <rect x="420" y="196" width="60" height="16" fill="#94a3b8" stroke="#1f2d46" stroke-width="3"/>
+            <circle cx="450" cy="204" r="16" fill="#e2e8f0" stroke="#1f2d46" stroke-width="3"/>
+            <line id="section-shaft" x1="450" y1="180" x2="450" y2="560" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="square"/>
+            <g id="section-nacelle" fill="none" stroke="none">
+              <rect x="360" y="140" width="180" height="56" fill="#e2e8f0" stroke="#1f2d46" stroke-width="3"/>
+              <line x1="540" y1="168" x2="575" y2="168" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="square"/>
+              <g id="section-rotor" transform="translate(575 168)" fill="none" stroke="none">
+                <line x1="-14" y1="0" x2="14" y2="0" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="square"/>
+                <g id="section-blades" fill="none" stroke="none">
+                  <line x1="0" y1="0" x2="0" y2="-90" fill="#cbd5e1" stroke="#cbd5e1" stroke-width="4" stroke-linecap="square"/>
+                  <line x1="0" y1="0" x2="78" y2="45" fill="#cbd5e1" stroke="#cbd5e1" stroke-width="4" stroke-linecap="square"/>
+                  <line x1="0" y1="0" x2="-78" y2="45" fill="#cbd5e1" stroke="#cbd5e1" stroke-width="4" stroke-linecap="square"/>
+                </g>
+                <circle cx="0" cy="0" r="14" fill="#e2e8f0" stroke="#1f2d46" stroke-width="3"/>
+              </g>
+            </g>
+            <g id="section-bottom-hub" transform="translate(450 560)" fill="none" stroke="none">
+              <circle cx="0" cy="0" r="18" fill="#e2e8f0" stroke="#1f2d46" stroke-width="3"/>
+              <g id="section-bottom-spokes" fill="none" stroke="none">
+                <line x1="-14" y1="0" x2="14" y2="0" fill="#cbd5e1" stroke="#22d3ee" stroke-width="4" stroke-linecap="square"/>
+                <line x1="0" y1="-14" x2="0" y2="14" fill="#cbd5e1" stroke="#22d3ee" stroke-width="4" stroke-linecap="square"/>
+              </g>
+            </g>
+            <rect x="490" y="535" width="70" height="50" fill="#94a3b8" stroke="#1f2d46" stroke-width="3"/>
+            <rect x="580" y="520" width="120" height="80" fill="#94a3b8" stroke="#1f2d46" stroke-width="3"/>
+            <g id="section-generator" transform="translate(640 560)" fill="none" stroke="none">
+              <circle cx="0" cy="0" r="24" fill="#e2e8f0" stroke="#1f2d46" stroke-width="3"/>
+              <g id="section-generator-spokes" fill="none" stroke="none">
+                <line x1="-18" y1="0" x2="18" y2="0" fill="#cbd5e1" stroke="#22d3ee" stroke-width="4" stroke-linecap="square"/>
+                <line x1="0" y1="-18" x2="0" y2="18" fill="#cbd5e1" stroke="#22d3ee" stroke-width="4" stroke-linecap="square"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-content" id="tabpanel-output" role="tabpanel" aria-labelledby="tab-output" hidden>
+      <div class="graphs-grid">
+        <article class="graph-card">
+          <div class="chart-head">
+            <h2>Misalignment</h2>
+            <output class="chart-current" id="misalignment-current">0 deg</output>
+          </div>
+          <div class="chart-wrap"><canvas id="misalignment-chart"></canvas></div>
+        </article>
+        <article class="graph-card">
+          <div class="chart-head">
+            <h2>Yaw rate</h2>
+            <output class="chart-current" id="yaw-current">0.0 deg/s</output>
+          </div>
+          <div class="chart-wrap"><canvas id="yaw-chart"></canvas></div>
+        </article>
+        <article class="graph-card">
+          <div class="chart-head">
+            <h2>Power output</h2>
+            <output class="chart-current" id="power-current">0%</output>
+          </div>
+          <div class="chart-wrap"><canvas id="power-chart"></canvas></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <aside class="side-column">
+    <section class="alignment-panel" id="alignment-panel" aria-labelledby="alignment-heading">
+      <header class="panel-header">
+        <h2 id="alignment-heading">Alignment</h2>
+        <div class="tour-controls">
+          <button type="button" class="tour-button" id="tour-button" aria-pressed="false">Guided tour</button>
+          <label for="tour-voice"><input type="checkbox" id="tour-voice"> Voice</label>
+          <button type="button" class="tour-button" id="tour-next" hidden>Next</button>
+          <p class="tour-status" id="tour-status" hidden></p>
+        </div>
+      </header>
+
+      <div class="readout-grid">
+        <div class="readout-item"><span>Wind speed</span><span class="readout-value"><output id="readout-wind-speed">12.0</output><span class="readout-unit">m/s</span></span></div>
+        <div class="readout-item"><span>Wind direction</span><span class="readout-value"><output id="readout-wind-direction">100</output><span class="readout-unit">deg</span></span></div>
+        <div class="readout-item"><span>Nacelle heading</span><span class="readout-value"><output id="readout-heading">0</output><span class="readout-unit">deg</span></span></div>
+        <div class="readout-item"><span>Misalignment</span><span class="readout-value"><output id="readout-misalignment">0</output><span class="readout-unit">deg</span></span></div>
+        <div class="readout-item"><span>Yaw command</span><span class="readout-value"><output id="readout-yaw-command">0.00</output><span class="readout-unit">deg/s</span></span></div>
+        <div class="readout-item"><span>Yaw rate</span><span class="readout-value"><output id="readout-yaw-rate">0.0</output><span class="readout-unit">deg/s</span></span></div>
+        <div class="readout-item"><span>Motor state</span><span class="readout-value"><output id="readout-motor-state">OFF</output></span></div>
+        <div class="readout-item"><span>Rotor rpm</span><span class="readout-value"><output id="readout-rotor-rpm">0.0</output></span></div>
+        <div class="readout-item"><span>Generator rpm</span><span class="readout-value"><output id="readout-generator-rpm">0.0</output></span></div>
+        <div class="readout-item"><span>Power</span><span class="readout-value"><output id="readout-power">0</output><span class="readout-unit">%</span></span></div>
+      </div>
+
+      <div class="state-indicator" id="state-indicator" data-state="IDLE" aria-live="polite">
+        <span class="state-square" aria-hidden="true"></span>
+        <span id="state-label">IDLE</span>
+      </div>
+
+      <ol class="workflow-list" id="workflow-list">
+        <li class="workflow-stage" data-stage="0">
+          <span class="stage-title">Detect wind</span>
+          <output class="stage-value">100 deg, 12 m/s</output>
+          <p class="stage-explanation">Detect wind: the roof sensors measure wind direction and speed.</p>
+        </li>
+        <li class="workflow-stage" data-stage="1">
+          <span class="stage-title">Compare heading</span>
+          <output class="stage-value">0 deg</output>
+          <p class="stage-explanation">Compare with nacelle heading: the controller reads the misalignment.</p>
+        </li>
+        <li class="workflow-stage" data-stage="2">
+          <span class="stage-title">Compute command</span>
+          <output class="stage-value">0.00 deg/s, deadband open</output>
+          <p class="stage-explanation">Controller computes yaw command: Kp times e plus Kd times de/dt sets the command.</p>
+        </li>
+        <li class="workflow-stage" data-stage="3">
+          <span class="stage-title">Turn nacelle</span>
+          <output class="stage-value">0.00 deg/s, motor OFF</output>
+          <p class="stage-explanation">Yaw motor turns nacelle: the drive follows the command through the yaw bearing.</p>
+        </li>
+        <li class="workflow-stage" data-stage="4">
+          <span class="stage-title">Resume power</span>
+          <output class="stage-value">0%</output>
+          <p class="stage-explanation">Aligned and power resumes: the rotor captures power at the current angle.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="controls-panel" id="controls-panel" aria-labelledby="controls-heading">
+      <header class="panel-header">
+        <h2 id="controls-heading">Controls</h2>
+      </header>
+
+      <div class="controls-body" id="controls-body">
+        <div class="button-row action-row" role="group" aria-label="Simulation actions">
+          <button type="button" class="control-button" id="start-button">Start</button>
+          <button type="button" class="control-button" id="pause-button">Pause</button>
+          <button type="button" class="control-button" id="reset-button">Reset</button>
+          <button type="button" class="control-button" id="gust-button" aria-pressed="false">Gusts off</button>
+          <button type="button" class="control-button" id="toggle-controls" aria-expanded="true" aria-controls="controls-body">Hide controls</button>
+        </div>
+
+        <div class="button-row preset-row" role="group" aria-label="Controller presets">
+          <button type="button" class="control-button preset-button" data-preset="stable" aria-pressed="true">Stable</button>
+          <button type="button" class="control-button preset-button" data-preset="aggressive" aria-pressed="false">Aggressive</button>
+          <button type="button" class="control-button preset-button" data-preset="sluggish" aria-pressed="false">Sluggish</button>
+        </div>
+
+        <div class="controls-groups" id="controls-groups">
+          <section class="control-group" aria-labelledby="controller-group-heading">
+            <h3 id="controller-group-heading">Controller</h3>
+            <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Kp</span><span class="slider-value"><output id="kp-value" for="kp">1.2</output><span class="slider-unit">gain</span></span></div>
+              <input type="range" id="kp" data-param="kp" min="0" max="3" step="0.1" value="1.2">
+              <div class="slider-ticks"><span>0</span><span>3</span></div>
+            </div>
+            <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Kd</span><span class="slider-value"><output id="kd-value" for="kd">0.6</output><span class="slider-unit">gain</span></span></div>
+              <input type="range" id="kd" data-param="kd" min="0" max="2" step="0.05" value="0.6">
+              <div class="slider-ticks"><span>0</span><span>2</span></div>
+            </div>
+            <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Deadband</span><span class="slider-value"><output id="deadband-value" for="deadband">0.5</output><span class="slider-unit">deg</span></span></div>
+              <input type="range" id="deadband" data-param="deadband" min="0" max="3" step="0.1" value="0.5">
+              <div class="slider-ticks"><span>0</span><span>3</span></div>
+            </div>
+            <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Max yaw rate</span><span class="slider-value"><output id="maxRate-value" for="maxRate">4</output><span class="slider-unit">deg/s</span></span></div>
+              <input type="range" id="maxRate" data-param="maxRate" min="0.5" max="10" step="0.1" value="4">
+              <div class="slider-ticks"><span>0.5</span><span>10</span></div>
+            </div>
+          </section>
+
+          <section class="control-group" aria-labelledby="plant-group-heading">
+            <h3 id="plant-group-heading">Plant</h3>
+            <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Motor lag</span><span class="slider-value"><output id="lag-value" for="lag">0.3</output><span class="slider-unit">s</span></span></div>
+              <input type="range" id="lag" data-param="lag" min="0.05" max="2" step="0.05" value="0.3">
+              <div class="slider-ticks"><span>0.05</span><span>2</span></div>
+            </div>
+            <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Sensor noise</span><span class="slider-value"><output id="noise-value" for="noise">1.5</output><span class="slider-unit">deg</span></span></div>
+              <input type="range" id="noise" data-param="noise" min="0" max="10" step="0.1" value="1.5">
+              <div class="slider-ticks"><span>0</span><span>10</span></div>
+            </div>
+            <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Sensor delay</span><span class="slider-value"><output id="delay-value" for="delay">0.4</output><span class="slider-unit">s</span></span></div>
+              <input type="range" id="delay" data-param="delay" min="0" max="2" step="0.05" value="0.4">
+              <div class="slider-ticks"><span>0</span><span>2</span></div>
+            </div>
+          </section>
+
+          <section class="control-group" aria-labelledby="wind-group-heading">
+            <h3 id="wind-group-heading">Wind</h3>
+            <div class="slider-control">
+              <div class="slider-line"><span class="slider-label">Wind speed</span><span class="slider-value"><output id="windSpeed-value" for="windSpeed">12</output><span class="slider-unit">m/s</span></span></div>
+              <input type="range" id="windSpeed" data-param="windSpeed" min="3" max="25" step="0.5" value="12">
+              <div class="slider-ticks"><span>3</span><span>25</span></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </aside>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Automated Nacelle Alignment System keeps a wind turbine facing the wind to capture the most energy.">
+  <title>Automated Nacelle Alignment System</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/simulation.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">Automated Nacelle Alignment System</a>
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation"></nav>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-copy">
+        <h1 id="hero-heading">Automated Nacelle Alignment System</h1>
+        <p class="hero-tagline">Keeps a wind turbine facing the wind to capture the most energy.</p>
+        <div class="button-row">
+          <a class="button button-primary" href="simulation.html">Open live simulation</a>
+          <a class="button button-secondary" href="#video">Watch demo video</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <svg viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 70h70M10 96h52M34 122h48" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" opacity="0.45"/>
+          <path d="M154 116h52l10 128h-72l10-128Z" fill="#1b2b44" stroke="#2b4464" stroke-width="2"/>
+          <rect x="132" y="98" width="82" height="34" rx="4" fill="#223a58" stroke="#22d3ee" stroke-width="2"/>
+          <circle cx="150" cy="115" r="11" fill="#22d3ee"/>
+          <g transform="translate(150 115)" fill="#67e8f9" opacity="0.9">
+            <path d="M-5 -8C-10 -48 -7 -82 0 -98 7 -82 10 -48 5 -8Z"/>
+            <path d="M-5 -8C-10 -48 -7 -82 0 -98 7 -82 10 -48 5 -8Z" transform="rotate(120)"/>
+            <path d="M-5 -8C-10 -48 -7 -82 0 -98 7 -82 10 -48 5 -8Z" transform="rotate(240)"/>
+          </g>
+          <path d="M112 246h96" stroke="#22d3ee" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section" id="problem" aria-labelledby="problem-heading">
+      <h2 id="problem-heading">The problem</h2>
+      <div class="problem-grid">
+        <article class="problem-item">
+          <p>Wind direction changes constantly.</p>
+        </article>
+        <article class="problem-item">
+          <p>A turbine produces the most power when its rotor faces the wind.</p>
+        </article>
+        <article class="problem-item">
+          <p>The nacelle must turn on the yaw bearing to stay aligned.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="how-it-works" aria-labelledby="how-it-works-heading">
+      <h2 id="how-it-works-heading">How it works</h2>
+      <ol class="steps-grid">
+        <li class="card step-card">
+          <span class="step-number" aria-hidden="true">1</span>
+          <h3>Detect wind</h3>
+          <p>A wind vane and anemometer on the nacelle roof measure direction and speed.</p>
+        </li>
+        <li class="card step-card">
+          <span class="step-number" aria-hidden="true">2</span>
+          <h3>Compare with nacelle heading</h3>
+          <p>Misalignment equals wind direction minus nacelle heading.</p>
+        </li>
+        <li class="card step-card">
+          <span class="step-number" aria-hidden="true">3</span>
+          <h3>Controller computes yaw command</h3>
+          <p>A PD law, then a deadband check.</p>
+        </li>
+        <li class="card step-card">
+          <span class="step-number" aria-hidden="true">4</span>
+          <h3>Yaw motor turns nacelle</h3>
+          <p>The yaw drive turns the nacelle through the yaw bearing, with a rate limit.</p>
+        </li>
+        <li class="card step-card">
+          <span class="step-number" aria-hidden="true">5</span>
+          <h3>Aligned, power resumes</h3>
+          <p>Within ±5°, the turbine produces full power.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section" id="results" aria-labelledby="results-heading">
+      <h2 id="results-heading">Simulation results</h2>
+      <p class="results-note">Median of 10 runs, Stable preset, noise 1.5 degrees, sensor delay 0.4 s.</p>
+      <div class="stats-grid">
+        <article class="card stat-card">
+          <p class="stat-value">27.59 s</p>
+          <p class="stat-label">Settling time, range 19.74 s to 38.52 s</p>
+        </article>
+        <article class="card stat-card">
+          <p class="stat-value">2.21°</p>
+          <p class="stat-label">Mean absolute error after settling, range 1.41° to 3.09°</p>
+        </article>
+        <article class="card stat-card">
+          <p class="stat-value">99.83%</p>
+          <p class="stat-label">Steady power after settling, range 99.70% to 99.92%</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="video" aria-labelledby="video-heading">
+      <h2 id="video-heading">Video</h2>
+      <div class="card video-card">
+        <video id="demo-video" controls preload="none" poster="assets/img/video-poster.svg" aria-label="Project demo video">
+          <source src="assets/video/demo.mp4" type="video/mp4">
+          Your browser does not support the video element.
+        </video>
+        <p class="video-caption">Project demo video</p>
+        <ol class="chapter-list" aria-label="Video chapters">
+          <li><button type="button" class="chapter-button" data-time="0" aria-pressed="false"><time>00:00</time><span>Introduction</span></button></li>
+          <li><button type="button" class="chapter-button" data-time="20" aria-pressed="false"><time>00:20</time><span>Structure</span></button></li>
+          <li><button type="button" class="chapter-button" data-time="50" aria-pressed="false"><time>00:50</time><span>Wind detection</span></button></li>
+          <li><button type="button" class="chapter-button" data-time="70" aria-pressed="false"><time>01:10</time><span>Control</span></button></li>
+          <li><button type="button" class="chapter-button" data-time="100" aria-pressed="false"><time>01:40</time><span>Aligned</span></button></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-name">Automated Nacelle Alignment System</p>
+      <p>UVCE Bengaluru, Mechanical Engineering</p>
+      <p>Contact: <a href="mailto:bhargavabm2007@gmail.com">bhargavabm2007@gmail.com</a></p>
+      <p><a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms and conditions</a> &middot; <a href="https://github.com/bhargavabm" target="_blank" rel="noopener noreferrer">github.com/bhargavabm</a></p>
+      <p>Last updated: November 23, 2026</p>
+    </div>
+  </footer>
+</body>
+</html>

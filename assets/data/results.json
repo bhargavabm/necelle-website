@@ -1,0 +1,92 @@
+{
+  "project": "Automated Nacelle Alignment System",
+  "run_count": 10,
+  "preset": "Stable",
+  "duration_s": 60,
+  "settings": {
+    "noise_deg": 1.5,
+    "delay_s": 0.4
+  },
+  "method": {
+    "settling": "First time after which the absolute alignment error stays below 5 degrees for at least 10 seconds.",
+    "after_settling": "Mean absolute error and mean power measured from the settling time to the end of each 60 second run."
+  },
+  "metrics": {
+    "settling_time_s": {
+      "value": 27.59,
+      "range": {
+        "min": 19.74,
+        "max": 38.52
+      },
+      "unit": "s"
+    },
+    "mean_abs_error_deg": {
+      "value": 2.21,
+      "range": {
+        "min": 1.41,
+        "max": 3.09
+      },
+      "unit": "deg"
+    },
+    "steady_power_pct": {
+      "value": 99.83,
+      "range": {
+        "min": 99.7,
+        "max": 99.92
+      },
+      "unit": "%"
+    }
+  },
+  "runs": [
+    {
+      "settling_time_s": 35.1,
+      "mean_abs_error_deg": 2.12,
+      "steady_power_pct": 99.84
+    },
+    {
+      "settling_time_s": 27.48,
+      "mean_abs_error_deg": 2.3,
+      "steady_power_pct": 99.82
+    },
+    {
+      "settling_time_s": 19.74,
+      "mean_abs_error_deg": 1.41,
+      "steady_power_pct": 99.92
+    },
+    {
+      "settling_time_s": 27.56,
+      "mean_abs_error_deg": 2.62,
+      "steady_power_pct": 99.75
+    },
+    {
+      "settling_time_s": 27.62,
+      "mean_abs_error_deg": 1.94,
+      "steady_power_pct": 99.88
+    },
+    {
+      "settling_time_s": 35.3,
+      "mean_abs_error_deg": 1.47,
+      "steady_power_pct": 99.9
+    },
+    {
+      "settling_time_s": 27.02,
+      "mean_abs_error_deg": 1.77,
+      "steady_power_pct": 99.86
+    },
+    {
+      "settling_time_s": 34.66,
+      "mean_abs_error_deg": 2.47,
+      "steady_power_pct": 99.79
+    },
+    {
+      "settling_time_s": 26.18,
+      "mean_abs_error_deg": 2.74,
+      "steady_power_pct": 99.75
+    },
+    {
+      "settling_time_s": 38.52,
+      "mean_abs_error_deg": 3.09,
+      "steady_power_pct": 99.7
+    }
+  ]
+}
