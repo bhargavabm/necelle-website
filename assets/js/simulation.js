@@ -316,24 +316,24 @@
     const windArrowMaterial = new THREE.MeshBasicMaterial({
       color: 0x22d3ee,
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.8,
       side: THREE.DoubleSide,
       depthWrite: false
     });
     const windArrowShape = new THREE.Shape();
-    windArrowShape.moveTo(-2.6, -0.25);
-    windArrowShape.lineTo(0.9, -0.25);
-    windArrowShape.lineTo(0.9, -0.7);
-    windArrowShape.lineTo(2.6, 0);
-    windArrowShape.lineTo(0.9, 0.7);
-    windArrowShape.lineTo(0.9, 0.25);
-    windArrowShape.lineTo(-2.6, 0.25);
+    windArrowShape.moveTo(-3.4, -0.38);
+    windArrowShape.lineTo(1.1, -0.38);
+    windArrowShape.lineTo(1.1, -0.95);
+    windArrowShape.lineTo(3.4, 0);
+    windArrowShape.lineTo(1.1, 0.95);
+    windArrowShape.lineTo(1.1, 0.38);
+    windArrowShape.lineTo(-3.4, 0.38);
     windArrowShape.closePath();
     const windArrowUprightGeometry = new THREE.ShapeGeometry(windArrowShape);
     const windArrowFlatGeometry = windArrowUprightGeometry.clone();
     windArrowFlatGeometry.rotateX(Math.PI / 2);
     const windArrows = [];
-    for (let i = 0; i < 7; i += 1) {
+    for (let i = 0; i < 12; i += 1) {
       const arrow = new THREE.Group();
       arrow.add(new THREE.Mesh(windArrowUprightGeometry, windArrowMaterial));
       arrow.add(new THREE.Mesh(windArrowFlatGeometry, windArrowMaterial));
@@ -1017,7 +1017,7 @@
     }
 
     function updateWindCaption() {
-      const windDirection = wrapDegrees(state.trueWindDirection + gustAngle());
+      const windDirection = state.trueWindDirection;
       const windText = state.params.windSpeed.toFixed(1) + " m/s from " + Math.round(windDirection) + "°";
       sectionWindLabel.textContent = "Wind " + windText;
     }

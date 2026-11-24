@@ -1570,6 +1570,13 @@ body.simulation-page {
   line-height: 1.2;
 }
 
+.simulation-page .wind-arrow-key {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
 @media (max-width: 1300px) {
   .simulation-page .sim-topbar {
     gap: 8px;
