@@ -1,4 +1,10 @@
+.env
+.env.*
+*.pem
+*.key
+*.p12
+.vercel/
 backup-before-*/
 scripts/
 screenshots/
-.vercel/
+
