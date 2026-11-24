@@ -2113,3 +2113,121 @@ body.simulation-page {
     font-size: 14px;
   }
 }
+
+.simulation-page .panel-header h2,
+.simulation-page .chart-head h2,
+.simulation-page .control-group h3 {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.simulation-page .alignment-panel {
+  flex: 1.15 1 0;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: 4px;
+  padding: 8px;
+}
+
+.simulation-page .controls-panel {
+  flex: 0.85 1 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 6px;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.simulation-page .readout-grid {
+  gap: 1px 10px;
+}
+
+.simulation-page .state-indicator {
+  padding: 3px 6px;
+}
+
+.simulation-page .workflow-list {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: none;
+  grid-auto-rows: minmax(28px, auto);
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.simulation-page .workflow-stage {
+  grid-template-columns: minmax(120px, auto) minmax(0, 1fr);
+  gap: 6px;
+  min-height: 28px;
+  padding: 2px 5px;
+  overflow: visible;
+}
+
+.simulation-page .stage-title {
+  white-space: nowrap;
+}
+
+.simulation-page .stage-value {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.simulation-page #controls-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.simulation-page .button-row {
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+}
+
+.simulation-page .button-row .control-button {
+  flex: 1 1 auto;
+  min-width: max-content;
+  min-height: 30px;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+
+.simulation-page .controls-groups {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 6px;
+}
+
+.simulation-page .control-group {
+  min-width: 0;
+  padding: 5px;
+}
+
+.simulation-page .control-group h3 {
+  margin: 0 0 4px;
+}
+
+.simulation-page .slider-control {
+  gap: 1px;
+  margin-bottom: 5px;
+}
+
+.simulation-page .slider-line {
+  gap: 4px;
+}
+
+.simulation-page .slider-label {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.simulation-page .slider-value {
+  white-space: nowrap;
+}
