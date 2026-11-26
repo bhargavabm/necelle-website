@@ -17,7 +17,6 @@ Complete:
 Still manual:
 
 - Visual review of `screenshots\rebuild-1440.png` and `screenshots\rebuild-375.png`
-- Demo video added as `assets\video\demo.mp4`
 - Custom domain connected in Vercel
 - Deployed to Vercel and checked on a phone and a laptop
 - Favicon confirmed in the browser tab on the live site
@@ -42,11 +41,10 @@ Open http://localhost:8000.
 - `privacy.html` - Privacy policy
 - `terms.html` - Terms and conditions
 - `assets/css/styles.css` - design tokens, shared components, and layout
-- `assets/js/main.js` - navigation, Privacy/Terms links, and video chapters
+- `assets/js/main.js` - navigation, Privacy/Terms links, and contact form
 - `assets/js/simulation.js` - physics, controller, 3D scene, section view, charts, and guided tour
 - `assets/data/results.json` - measured simulation results
-- `assets/img/` - favicon and video poster
-- `assets/video/` - demo video location
+- `assets/img/` - favicon
 
 ## Deploy
 

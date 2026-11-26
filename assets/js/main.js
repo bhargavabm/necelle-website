@@ -5,7 +5,6 @@
     { label: "Home", href: "index.html" },
     { label: "Simulation", href: "simulation.html" },
     { label: "Architecture", href: "about.html#architecture" },
-    { label: "Video", href: "index.html#video" },
     { label: "About", href: "about.html" },
     { label: "Contact", href: "about.html#contact" },
     { label: "Privacy", href: "privacy.html" },
@@ -85,29 +84,6 @@
 
   updateActiveLink();
   window.addEventListener("hashchange", updateActiveLink);
-})();
-
-(function () {
-  "use strict";
-
-  const video = document.getElementById("demo-video");
-  const chapters = document.querySelectorAll(".chapter-button");
-  if (!video || chapters.length === 0) return;
-
-  chapters.forEach(function (chapter) {
-    chapter.addEventListener("click", function () {
-      const seconds = Number(chapter.dataset.time);
-      if (!Number.isFinite(seconds)) return;
-
-      video.currentTime = seconds;
-
-      chapters.forEach(function (other) {
-        const isSelected = other === chapter;
-        other.classList.toggle("is-active", isSelected);
-        other.setAttribute("aria-pressed", String(isSelected));
-      });
-    });
-  });
 })();
 
 (function () {

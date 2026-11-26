@@ -97,7 +97,6 @@ a:hover {
 
 img,
 svg,
-video,
 canvas {
   max-width: 100%;
 }
@@ -220,7 +219,6 @@ textarea:disabled {
 .button,
 .control-button,
 .view-button,
-.chapter-button,
 .tour-button {
   display: inline-flex;
   align-items: center;
@@ -240,7 +238,6 @@ textarea:disabled {
 .menu-button:hover,
 .control-button:hover,
 .view-button:hover,
-.chapter-button:hover,
 .tour-button:hover {
   border-color: var(--accent-hover);
 }
@@ -421,59 +418,6 @@ textarea:disabled {
   margin-bottom: var(--space-2);
   color: var(--muted);
   font-size: 14px;
-}
-
-.video-card {
-  padding: var(--space-3);
-}
-
-.video-card video {
-  display: block;
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.video-caption {
-  margin-top: var(--space-2);
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.chapter-list {
-  margin: var(--space-2) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.chapter-button {
-  width: 100%;
-  justify-content: start;
-  grid-template-columns: 72px minmax(0, 1fr);
-  display: grid;
-  border-radius: 0;
-  border-top: 0;
-  text-align: left;
-}
-
-.chapter-list li:first-child .chapter-button {
-  border-top: 1px solid var(--border);
-  border-radius: var(--radius) var(--radius) 0 0;
-}
-
-.chapter-list li:last-child .chapter-button {
-  border-radius: 0 0 var(--radius) var(--radius);
-}
-
-.chapter-button time {
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.chapter-button.is-active {
-  border-color: var(--accent);
-  color: var(--accent);
 }
 
 .simulation-layout {
