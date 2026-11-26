@@ -31,18 +31,18 @@
 }
 
 :root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --border: #334155;
-  --text: #f1f5f9;
-  --muted: #cbd5e1;
-  --accent: #60a5fa;
-  --accent-hover: #93c5fd;
-  --on-accent: #0f172a;
+  --bg: #0f1729;
+  --surface: #162036;
+  --border: #26324d;
+  --text: #e8ecf3;
+  --muted: #9aa6bd;
+  --accent: #3fb8a8;
+  --accent-hover: #6ec9bc;
+  --accent-contrast: #0f1729;
   --aligned: #22c55e;
   --turning: #f59e0b;
   --fault: #ef4444;
-  --neutral: #cbd5e1;
+  --neutral: #9aa6bd;
   --space-1: 8px;
   --space-2: 16px;
   --space-3: 24px;
@@ -169,7 +169,7 @@ textarea:disabled {
   z-index: 100;
   padding: var(--space-1) var(--space-2);
   background: var(--accent);
-  color: var(--on-accent);
+  color: var(--accent-contrast);
   border-radius: var(--radius);
   font-weight: 700;
   text-decoration: none;
@@ -277,13 +277,13 @@ textarea:disabled {
 .button-primary {
   border-color: var(--accent);
   background: var(--accent);
-  color: var(--on-accent);
+  color: var(--accent-contrast);
 }
 
 .button-primary:hover {
   border-color: var(--accent-hover);
   background: var(--accent-hover);
-  color: var(--on-accent);
+  color: var(--accent-contrast);
 }
 
 .button-secondary {

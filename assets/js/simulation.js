@@ -154,7 +154,7 @@
     const darkMaterial = new THREE.MeshStandardMaterial({ color: 0x34465c, metalness: 0.6, roughness: 0.4 });
     const bladeMaterial = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.1, roughness: 0.5 });
     const cabinetMaterial = new THREE.MeshStandardMaterial({ color: 0x3f6f77, metalness: 0.25, roughness: 0.6 });
-    const accentMaterial = new THREE.MeshStandardMaterial({ color: 0x22d3ee, metalness: 0.3, roughness: 0.4 });
+    const accentMaterial = new THREE.MeshStandardMaterial({ color: 0x3fb8a8, metalness: 0.3, roughness: 0.4 });
 
     function addShadow(mesh) {
       mesh.castShadow = true;
@@ -314,7 +314,7 @@
     yawAssembly.add(generator);
 
     const windArrowMaterial = new THREE.MeshBasicMaterial({
-      color: 0x22d3ee,
+      color: 0x3fb8a8,
       transparent: true,
       opacity: 0.8,
       side: THREE.DoubleSide,
@@ -1200,7 +1200,7 @@
         const top = y.getPixelForValue(5);
         const bottom = y.getPixelForValue(-5);
         ctx.save();
-        ctx.fillStyle = "rgba(34, 211, 238, 0.12)";
+        ctx.fillStyle = "rgba(63, 184, 168, 0.12)";
         ctx.fillRect(area.left, top, area.right - area.left, bottom - top);
         ctx.restore();
       }
@@ -1214,7 +1214,7 @@
         const ctx = chart.ctx;
         const zero = y.getPixelForValue(0);
         ctx.save();
-        ctx.strokeStyle = "rgba(226, 232, 240, 0.6)";
+        ctx.strokeStyle = "rgba(232, 236, 243, 0.6)";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(area.left, zero);
@@ -1225,7 +1225,7 @@
     };
 
     if (typeof Chart !== "undefined") {
-      Chart.defaults.color = "#94a3b8";
+      Chart.defaults.color = "#9aa6bd";
       Chart.defaults.font.family = '"JetBrains Mono", ui-monospace, Consolas, monospace';
       Chart.defaults.font.size = 14;
 
@@ -1255,15 +1255,15 @@
             scales: {
               x: {
                 type: "linear",
-                title: { display: true, text: "time (s)", color: "#94a3b8", font: { size: 14 } },
-                ticks: { color: "#94a3b8", font: { size: 14 } },
-                grid: { color: "#1f2d46" }
+                title: { display: true, text: "time (s)", color: "#9aa6bd", font: { size: 14 } },
+                ticks: { color: "#9aa6bd", font: { size: 14 } },
+                grid: { color: "#26324d" }
               },
               y: {
                 min: yMin,
                 max: yMax,
-                ticks: { color: "#94a3b8", font: { size: 14 } },
-                grid: { color: "#1f2d46" }
+                ticks: { color: "#9aa6bd", font: { size: 14 } },
+                grid: { color: "#26324d" }
               }
             }
           },
@@ -1271,7 +1271,7 @@
         });
       }
 
-      charts.push(buildChart("misalignment-chart", -90, 90, "#22d3ee", [bandPlugin]));
+      charts.push(buildChart("misalignment-chart", -90, 90, "#3fb8a8", [bandPlugin]));
       charts.push(buildChart("yaw-chart", -10, 10, "#f59e0b", [zeroLinePlugin]));
       charts.push(buildChart("power-chart", 0, 100, "#22c55e", []));
     }
