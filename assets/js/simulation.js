@@ -1226,7 +1226,7 @@
 
     if (typeof Chart !== "undefined") {
       Chart.defaults.color = "#94a3b8";
-      Chart.defaults.font.family = "system-ui, sans-serif";
+      Chart.defaults.font.family = '"JetBrains Mono", ui-monospace, Consolas, monospace';
       Chart.defaults.font.size = 14;
 
       function buildChart(canvasId, yMin, yMax, color, plugins) {
