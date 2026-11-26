@@ -149,12 +149,12 @@
     scene.add(sun.target);
 
     // TURBINE MODEL
-    const concreteMaterial = new THREE.MeshStandardMaterial({ color: 0xa8adb3, roughness: 0.95 });
-    const steelMaterial = new THREE.MeshStandardMaterial({ color: 0xd7e2ec, metalness: 0.65, roughness: 0.35 });
-    const darkMaterial = new THREE.MeshStandardMaterial({ color: 0x34465c, metalness: 0.6, roughness: 0.4 });
-    const bladeMaterial = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.1, roughness: 0.5 });
-    const cabinetMaterial = new THREE.MeshStandardMaterial({ color: 0x3f6f77, metalness: 0.25, roughness: 0.6 });
-    const accentMaterial = new THREE.MeshStandardMaterial({ color: 0x3fb8a8, metalness: 0.3, roughness: 0.4 });
+    const concreteMaterial = new THREE.MeshStandardMaterial({ color: 0xd5dbe5, roughness: 0.95 });
+    const steelMaterial = new THREE.MeshStandardMaterial({ color: 0xd5dbe5, metalness: 0.65, roughness: 0.35 });
+    const darkMaterial = new THREE.MeshStandardMaterial({ color: 0x4a5670, metalness: 0.6, roughness: 0.4 });
+    const bladeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.1, roughness: 0.5 });
+    const cabinetMaterial = new THREE.MeshStandardMaterial({ color: 0x4a5670, metalness: 0.25, roughness: 0.6 });
+    const accentMaterial = new THREE.MeshStandardMaterial({ color: 0x0f766e, metalness: 0.3, roughness: 0.4 });
 
     function addShadow(mesh) {
       mesh.castShadow = true;
@@ -314,7 +314,7 @@
     yawAssembly.add(generator);
 
     const windArrowMaterial = new THREE.MeshBasicMaterial({
-      color: 0x3fb8a8,
+      color: 0x0f766e,
       transparent: true,
       opacity: 0.8,
       side: THREE.DoubleSide,
@@ -1200,7 +1200,7 @@
         const top = y.getPixelForValue(5);
         const bottom = y.getPixelForValue(-5);
         ctx.save();
-        ctx.fillStyle = "rgba(63, 184, 168, 0.12)";
+        ctx.fillStyle = "rgba(15, 118, 110, 0.12)";
         ctx.fillRect(area.left, top, area.right - area.left, bottom - top);
         ctx.restore();
       }
@@ -1214,7 +1214,7 @@
         const ctx = chart.ctx;
         const zero = y.getPixelForValue(0);
         ctx.save();
-        ctx.strokeStyle = "rgba(232, 236, 243, 0.6)";
+        ctx.strokeStyle = "rgba(213, 219, 229, 0.6)";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(area.left, zero);
@@ -1225,7 +1225,7 @@
     };
 
     if (typeof Chart !== "undefined") {
-      Chart.defaults.color = "#9aa6bd";
+      Chart.defaults.color = "#4a5670";
       Chart.defaults.font.family = '"JetBrains Mono", ui-monospace, Consolas, monospace';
       Chart.defaults.font.size = 14;
 
@@ -1255,15 +1255,15 @@
             scales: {
               x: {
                 type: "linear",
-                title: { display: true, text: "time (s)", color: "#9aa6bd", font: { size: 14 } },
-                ticks: { color: "#9aa6bd", font: { size: 14 } },
-                grid: { color: "#26324d" }
+                title: { display: true, text: "time (s)", color: "#4a5670", font: { size: 14 } },
+                ticks: { color: "#4a5670", font: { size: 14 } },
+                grid: { color: "#d5dbe5" }
               },
               y: {
                 min: yMin,
                 max: yMax,
-                ticks: { color: "#9aa6bd", font: { size: 14 } },
-                grid: { color: "#26324d" }
+                ticks: { color: "#4a5670", font: { size: 14 } },
+                grid: { color: "#d5dbe5" }
               }
             }
           },
@@ -1271,9 +1271,9 @@
         });
       }
 
-      charts.push(buildChart("misalignment-chart", -90, 90, "#3fb8a8", [bandPlugin]));
-      charts.push(buildChart("yaw-chart", -10, 10, "#f59e0b", [zeroLinePlugin]));
-      charts.push(buildChart("power-chart", 0, 100, "#22c55e", []));
+      charts.push(buildChart("misalignment-chart", -90, 90, "#0f766e", [bandPlugin]));
+      charts.push(buildChart("yaw-chart", -10, 10, "#b45309", [zeroLinePlugin]));
+      charts.push(buildChart("power-chart", 0, 100, "#15803d", []));
     }
 
     function sampleHistory() {
