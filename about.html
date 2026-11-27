@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About the Automated Nacelle Alignment System.">
+  <title>Automated Nacelle Alignment System</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/simulation.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">Automated Nacelle Alignment System</a>
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation"></nav>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    <section class="card" aria-labelledby="about-heading">
+      <h1 id="about-heading">About</h1>
+      <p>This project demonstrates how a wind turbine nacelle can follow a changing wind direction. The simulation shows the yaw controller, the nacelle motion, and the resulting power output.</p>
+      <p>The work was done by UVCE Bengaluru, Mechanical Engineering, for a jury demonstration.</p>
+    </section>
+
+    <section class="card" id="architecture" aria-labelledby="architecture-heading">
+      <h2 id="architecture-heading">Architecture</h2>
+      <p>A wind turbine produces the most power when its rotor faces the wind. The nacelle, the housing on top of the tower, turns on a yaw bearing to keep the rotor aligned as the wind changes. This project models that control loop and runs it in the browser.</p>
+
+      <h3>The control loop</h3>
+      <ol>
+        <li>Wind sensors on the nacelle roof measure the wind direction and speed.</li>
+        <li>The controller calculates misalignment, which is the wind direction minus the nacelle heading.</li>
+        <li>A PD controller computes the yaw rate command from the misalignment and how quickly it is changing, using the proportional gain Kp and derivative gain Kd.</li>
+        <li>A deadband sets the command to zero when the misalignment is small, so the motor does not make tiny corrections.</li>
+        <li>A rate limit caps the command at the maximum speed of the yaw motor.</li>
+        <li>The yaw motor turns the nacelle on the yaw bearing, with a short response lag.</li>
+        <li>The new nacelle heading feeds back into step 2, closing the loop.</li>
+      </ol>
+
+      <h3>Power and alignment</h3>
+      <p>Power output is calculated as the cosine squared of the misalignment. A turbine 10 degrees off the wind keeps about 97 percent of its output, and one 45 degrees off keeps half.</p>
+
+      <h3>Drivetrain</h3>
+      <p>The rotor turns a vertical transmission shaft down the tower to a bottom hub. A gearbox with a ratio of 50 to 1 drives the generator on the ground, so generator speed is 50 times rotor speed. The ground cabinet holds the generator and controller in this model.</p>
+
+      <h3>States</h3>
+      <dl>
+        <dt>IDLE:</dt>
+        <dd>the simulation is not running.</dd>
+        <dt>MONITORING:</dt>
+        <dd>the misalignment is under 5 degrees.</dd>
+        <dt>TURNING:</dt>
+        <dd>the misalignment is over 5 degrees and the nacelle is moving.</dd>
+        <dt>ALIGNED:</dt>
+        <dd>the misalignment has stayed under 5 degrees for at least 3 seconds.</dd>
+        <dt>FAULT:</dt>
+        <dd>the misalignment has stayed over 45 degrees for more than 10 seconds after the first alignment.</dd>
+      </dl>
+
+      <h3>Measured results</h3>
+      <p>Ten runs of the Stable preset from the same starting point gave a median settling time of 27.6 seconds, with a range of 19.7 to 38.5 seconds. The median mean error after settling was 2.2 degrees, and the median steady power was 99.8 percent. The wind model is random, so results vary between runs.</p>
+
+      <h3>Limits of the model</h3>
+      <ul>
+        <li>Rotor speed scales linearly with wind speed. Real turbines limit rotor speed at high wind.</li>
+        <li>Wind changes are random, so settling time varies between runs.</li>
+        <li>The vertical transmission shaft is a simplified design. Real turbines use a horizontal main shaft inside the nacelle.</li>
+        <li>Power and sensor wiring to the rotating nacelle would need a slip ring or a wireless link. The model does not simulate this.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="contact" aria-labelledby="contact-heading">
+      <h2 id="contact-heading">Contact</h2>
+      <p>Use this form to send a project enquiry. Your email app opens with the message ready to send.</p>
+
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="form-field">
+          <label for="contact-name">Name</label>
+          <input type="text" id="contact-name" name="name" autocomplete="name" required>
+        </div>
+        <div class="form-field">
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" name="email" autocomplete="email" required>
+        </div>
+        <div class="form-field">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" rows="5" required></textarea>
+        </div>
+        <p class="form-error" id="contact-error" role="alert" hidden style="font-size: var(--font-body);"></p>
+        <button type="submit" class="button button-primary contact-submit">Open email app</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner" style="font-size: var(--font-body);">
+      <p class="footer-name">Automated Nacelle Alignment System</p>
+      <p>UVCE Bengaluru, Mechanical Engineering</p>
+      <p>Contact: <a href="mailto:bhargavabm2007@gmail.com" class="footer-icon-link" aria-label="Email the team at bhargavabm2007@gmail.com" title="Email the team"><img src="assets/img/icon-email.svg" alt="" width="24" height="24"></a></p>
+      <p><a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms and conditions</a> &middot; <a href="https://github.com/bhargavabm" target="_blank" rel="noopener noreferrer">github.com/bhargavabm</a></p>
+      <p>Last updated: November 23, 2026</p>
+    </div>
+  </footer>
+</body>
+</html>

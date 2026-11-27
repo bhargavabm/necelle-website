@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="var(--bg)"/>
+  <circle cx="640" cy="330" r="86" fill="none" stroke="var(--accent)" stroke-width="8" opacity="0.9"/>
+  <path d="M615 285 705 330 615 375Z" fill="var(--accent)"/>
+  <text x="640" y="500" text-anchor="middle" fill="var(--text)" font-family="JetBrains Mono, ui-monospace, Consolas, monospace" font-size="42" font-weight="700">Project demo</text>
+  <text x="640" y="556" text-anchor="middle" fill="var(--muted)" font-family="JetBrains Mono, ui-monospace, Consolas, monospace" font-size="28">Video placeholder</text>
+</svg>
