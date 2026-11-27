@@ -301,17 +301,27 @@
 
     const bottomHub = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 1.4, 24), steelMaterial));
     bottomHub.rotation.z = Math.PI / 2;
-    bottomHub.position.y = PAD_HEIGHT + 2 - towerTopY;
+    bottomHub.position.set(-6, PAD_HEIGHT + 2 - towerTopY, 0);
     yawAssembly.add(bottomHub);
 
     const gearbox = addShadow(new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.2, 2.6), darkMaterial));
-    gearbox.position.y = PAD_HEIGHT + 4 - towerTopY;
+    gearbox.position.set(0, PAD_HEIGHT + 2 - towerTopY, 0);
     yawAssembly.add(gearbox);
 
     const generator = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 3.2, 24), cabinetMaterial));
     generator.rotation.z = Math.PI / 2;
-    generator.position.y = PAD_HEIGHT + 7 - towerTopY;
+    generator.position.set(6, PAD_HEIGHT + 2 - towerTopY, 0);
     yawAssembly.add(generator);
+
+    // HORIZONTAL SHAFT: bottom hub -> gearbox -> generator
+    const shaftRadius = 0.32;
+    const hubRightX = -6 + 0.7;
+    const genLeftX = 6 - 1.6;
+    const shaftLength = genLeftX - hubRightX;
+    const shaft = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(shaftRadius, shaftRadius, shaftLength, 16), accentMaterial));
+    shaft.rotation.z = Math.PI / 2;
+    shaft.position.set((hubRightX + genLeftX) / 2, PAD_HEIGHT + 2 - towerTopY, 0);
+    yawAssembly.add(shaft);
 
     // SECTION CLICK LABELS
     const sectionLabel = document.getElementById("section-label");
@@ -937,6 +947,9 @@
       const bladeSpeed = (0.35 + state.params.windSpeed * 0.06) * (0.3 + state.power / 100);
       state.bladeAngle += bladeSpeed * dt;
       rotor.rotation.z = state.bladeAngle;
+      const generatorRpm = rotorRpm() * GEAR_RATIO;
+      const shaftAngleSpeed = generatorRpm * 2 * Math.PI / 60;
+      shaft.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), shaftAngleSpeed * dt);
     }
 
     // CONTROLS
