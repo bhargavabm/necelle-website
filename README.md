@@ -25,13 +25,6 @@ A wind turbine nacelle turns on its yaw bearing to face the wind. This project m
 
 The Stable preset was run 10 times and these are the median results. Settling time is 27.59 s, with a range of 19.74 s to 38.52 s. Mean absolute error after settling is 2.21 degrees, with a range of 1.41 to 3.09 degrees. Steady power is 99.83 percent, with a range of 99.70 to 99.92 percent. The wind model is random, so results vary between runs.
 
-## Run locally
-
-```text
-python -m http.server 8000 --bind 127.0.0.1
-```
-
-Open http://127.0.0.1:8000. The 3D view needs an internet connection because Three.js and Chart.js load from cdnjs.cloudflare.com.
 
 ## Deploy
 
