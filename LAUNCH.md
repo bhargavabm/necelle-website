@@ -1,12 +1,15 @@
 # Launch checklist
 
-- [x] Favicon added
-- [x] Privacy policy page added
-- [x] Terms and conditions page added
-- [x] Made with AI tag removed (confirm with a search before checking it)
-- [x] Contact form (mailto) added
-- [x] Key results replaced with measured simulation values
-- [x] Simulation layout rebuilt and bounding-box checks passed at 1440px and 375px
+- [x] Favicon files return 200 locally (`assets/img/favicon.svg`, `favicon.ico`)
+- [x] Privacy policy page returns 200 locally
+- [x] Terms and conditions dialog opens and closes from the footer on index, about, and privacy
+- [x] Made with AI tag confirmed absent with a site-page search
+- [x] Contact email icon (mailto) present in the footer on index, about, and privacy
+- [x] Key results match `assets/data/results.json`
+- [x] Layout overflow and out-of-bounds checks passed at 1440px and 375px on all four pages
+- [x] Security headers confirmed on `index.html`
+- [x] Blocked paths confirmed 404 locally (removed terms page, backups, scripts, `vercel.json`, `.git/config`)
+- [x] No em dash, emoji, exclamation mark, localhost text, CSS/DOM gradient, purple colour, or pill radius confirmed locally
 - [ ] Visual review of screenshots\rebuild-1440.png and screenshots\rebuild-375.png (manual)
 - [ ] Demo video added as assets\video\demo.mp4 (manual)
 - [ ] Custom domain connected in Vercel (manual)

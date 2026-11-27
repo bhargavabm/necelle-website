@@ -34,6 +34,10 @@
       <p>A wind turbine produces the most power when its rotor faces the wind. The nacelle, the housing on top of the tower, turns on a yaw bearing to keep the rotor aligned as the wind changes. This project models that control loop and runs it in the browser.</p>
 
       <h3>The control loop</h3>
+      <picture>
+        <source media="(min-width: 768px)" srcset="assets/img/architecture-desktop.svg">
+        <img src="assets/img/architecture-mobile.svg" alt="Control loop: wind sensors measure wind direction; misalignment feeds a PD controller, then a deadband and rate limit, then the yaw motor, which turns the nacelle; the nacelle heading feeds back to the misalignment." width="360" height="720" style="max-width:100%;height:auto">
+      </picture>
       <ol>
         <li>Wind sensors on the nacelle roof measure the wind direction and speed.</li>
         <li>The controller calculates misalignment, which is the wind direction minus the nacelle heading.</li>
@@ -75,38 +79,45 @@
         <li>Power and sensor wiring to the rotating nacelle would need a slip ring or a wireless link. The model does not simulate this.</li>
       </ul>
     </section>
-
-    <section class="card" id="contact" aria-labelledby="contact-heading">
-      <h2 id="contact-heading">Contact</h2>
-      <p>Use this form to send a project enquiry. Your email app opens with the message ready to send.</p>
-
-      <form class="contact-form" id="contact-form" novalidate>
-        <div class="form-field">
-          <label for="contact-name">Name</label>
-          <input type="text" id="contact-name" name="name" autocomplete="name" required>
-        </div>
-        <div class="form-field">
-          <label for="contact-email">Email</label>
-          <input type="email" id="contact-email" name="email" autocomplete="email" required>
-        </div>
-        <div class="form-field">
-          <label for="contact-message">Message</label>
-          <textarea id="contact-message" name="message" rows="5" required></textarea>
-        </div>
-        <p class="form-error" id="contact-error" role="alert" hidden style="font-size: var(--font-body);"></p>
-        <button type="submit" class="button button-primary contact-submit">Open email app</button>
-      </form>
-    </section>
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner" style="font-size: var(--font-body);">
       <p class="footer-name">Automated Nacelle Alignment System</p>
-      <p>UVCE Bengaluru, Mechanical Engineering</p>
-      <p>Contact: <a href="mailto:bhargavabm2007@gmail.com" class="footer-icon-link" aria-label="Email the team at bhargavabm2007@gmail.com" title="Email the team"><img src="assets/img/icon-email.svg" alt="" width="24" height="24"></a></p>
-      <p><a href="privacy.html">Privacy policy</a> &middot; <a href="terms.html">Terms and conditions</a> &middot; <a href="https://github.com/bhargavabm" target="_blank" rel="noopener noreferrer">github.com/bhargavabm</a></p>
+      <p class="footer-college">UVCE Bengaluru, Mechanical Engineering</p>
+      <p class="footer-team-names">Bhargava B M and Ashish K S</p>
+      <p class="footer-students">Mechanical Engineering students, UVCE Bengaluru</p>
+      <p class="footer-contact">Contact: <a href="mailto:bhargavabm2007@gmail.com" class="footer-icon-link" aria-label="Email the team at bhargavabm2007@gmail.com" title="Email the team"><img src="assets/img/icon-email.svg" alt="" width="24" height="24"></a></p>
+      <p class="footer-links"><a href="privacy.html">Privacy policy</a> <span class="footer-sep">&middot;</span> <button type="button" class="footer-terms-button" data-terms-open aria-haspopup="dialog">Terms and conditions</button> <span class="footer-sep">&middot;</span> <a href="https://github.com/bhargavabm" target="_blank" rel="noopener noreferrer" class="footer-icon-link" aria-label="GitHub profile" title="GitHub profile"><img src="assets/img/icon-github.svg" alt="" width="24" height="24"></a></p>
       <p>Last updated: November 23, 2026</p>
     </div>
+    <dialog id="terms-dialog" aria-labelledby="terms-title">
+      <div class="terms-dialog-content">
+        <div class="terms-dialog-header">
+          <h2 id="terms-title">Terms and conditions</h2>
+          <button type="button" class="terms-close" data-terms-close>Close</button>
+        </div>
+        <p>Last updated: November 23, 2026</p>
+
+        <h3>Student demonstration</h3>
+        <p>This site is a student engineering demonstration by UVCE Bengaluru, Mechanical Engineering. It is shared to explain the project and show a jury demo.</p>
+
+        <h3>Simulation use</h3>
+        <p>The simulation is for illustration only. It is not a certified control system and must not be used to operate real equipment.</p>
+
+        <h3>No warranty</h3>
+        <p>The content is provided as is without warranty. The team does not promise that the site or simulation will be error free or fit for any real world use.</p>
+
+        <h3>Ownership</h3>
+        <p>The team owns the content on this site, including the text, graphics, and simulation code.</p>
+
+        <h3>No copying as your own work</h3>
+        <p>Visitors may not copy this site, or any part of it, and present it as their own work.</p>
+
+        <h3>Contact</h3>
+        <p>For questions about these terms, email bhargavabm2007@gmail.com.</p>
+      </div>
+    </dialog>
   </footer>
 </body>
 </html>

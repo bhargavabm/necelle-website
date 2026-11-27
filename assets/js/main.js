@@ -6,9 +6,8 @@
     { label: "Simulation", href: "simulation.html" },
     { label: "Architecture", href: "about.html#architecture" },
     { label: "About", href: "about.html" },
-    { label: "Contact", href: "about.html#contact" },
     { label: "Privacy", href: "privacy.html" },
-    { label: "Terms", href: "terms.html" }
+    { label: "Terms", dialog: true }
   ];
 
   const nav = document.getElementById("site-nav");
@@ -28,8 +27,15 @@
 
   navItems.forEach(function (item) {
     const itemElement = document.createElement("li");
-    const link = document.createElement("a");
-    link.href = item.href;
+    const link = document.createElement(item.dialog ? "button" : "a");
+    if (item.dialog) {
+      link.type = "button";
+      link.className = "nav-dialog-button";
+      link.setAttribute("data-terms-open", "");
+      link.setAttribute("aria-haspopup", "dialog");
+    } else {
+      link.href = item.href;
+    }
     link.textContent = item.label;
     itemElement.appendChild(link);
     list.appendChild(itemElement);
@@ -89,52 +95,27 @@
 (function () {
   "use strict";
 
-  const form = document.getElementById("contact-form");
-  if (!form) return;
+  const dialog = document.getElementById("terms-dialog");
+  if (!dialog) return;
 
-  const error = document.getElementById("contact-error");
-  const nameInput = document.getElementById("contact-name");
-  const emailInput = document.getElementById("contact-email");
-  const messageInput = document.getElementById("contact-message");
+  let opener = null;
 
-  function showError(text) {
-    error.textContent = text;
-    error.hidden = false;
+  document.querySelectorAll("[data-terms-open]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      opener = button;
+      dialog.showModal();
+    });
+  });
+
+  const closeButton = dialog.querySelector("[data-terms-close]");
+  if (closeButton) {
+    closeButton.addEventListener("click", function () {
+      dialog.close();
+    });
   }
 
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    error.hidden = true;
-
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim();
-    const message = messageInput.value.trim();
-
-    if (name.length === 0) {
-      showError("Enter your name.");
-      return;
-    }
-    if (email.length === 0) {
-      showError("Enter your email.");
-      return;
-    }
-    if (!email.includes("@")) {
-      showError("Enter a valid email with @.");
-      return;
-    }
-    if (message.length === 0) {
-      showError("Enter your message.");
-      return;
-    }
-
-    const subject = "Nacelle project enquiry";
-    const body = "Name: " + name + "\nEmail: " + email + "\n\n" + message;
-    const href = "mailto:bhargavabm2007@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-    const link = document.createElement("a");
-    link.href = href;
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+  dialog.addEventListener("close", function () {
+    if (opener && document.contains(opener)) opener.focus();
+    opener = null;
   });
 })();

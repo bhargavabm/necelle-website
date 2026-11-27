@@ -123,7 +123,7 @@
     renderer.localClippingEnabled = true;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
@@ -308,15 +308,15 @@
     gearbox.position.set(0, PAD_HEIGHT + 2 - towerTopY, 0);
     yawAssembly.add(gearbox);
 
-    const generator = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 3.2, 24), cabinetMaterial));
+    const generator = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(2.72, 2.72, 5.12, 24), cabinetMaterial));
     generator.rotation.z = Math.PI / 2;
-    generator.position.set(6, PAD_HEIGHT + 2 - towerTopY, 0);
+    generator.position.set(6, PAD_HEIGHT + 3.52 - towerTopY, 0);
     yawAssembly.add(generator);
 
     // HORIZONTAL SHAFT: bottom hub -> gearbox -> generator
     const shaftRadius = 0.32;
     const hubRightX = -6 + 0.7;
-    const genLeftX = 6 - 1.6;
+    const genLeftX = 6 - 2.56;
     const shaftLength = genLeftX - hubRightX;
     const shaft = addShadow(new THREE.Mesh(new THREE.CylinderGeometry(shaftRadius, shaftRadius, shaftLength, 16), accentMaterial));
     shaft.rotation.z = Math.PI / 2;
@@ -529,6 +529,7 @@
       rotor: rotor,
       windArrows: windArrows,
       get activeCamera() { return activeCamera; },
+      get cameraDistance() { return camera.position.distanceTo(controls.target); },
       get controlsEnabled() { return controls.enabled; },
       get sectionControlsEnabled() { return sectionControlsEnabled; },
       get sectionState() {
@@ -574,6 +575,7 @@
           opacity: windArrowMaterial.opacity
         };
       },
+      get history() { return history.slice(); },
       raycastAt: function (clientX, clientY) {
         const rect = renderer.domElement.getBoundingClientRect();
         pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
@@ -1163,6 +1165,45 @@
         setView(button.dataset.view);
       });
     });
+
+    const zoomInButton = document.querySelector(".zoom-in");
+    const zoomOutButton = document.querySelector(".zoom-out");
+    const zoomResetButton = document.querySelector(".zoom-reset");
+    const ZOOM_STEP = 0.85;
+
+    function currentView() {
+      return simulationScene.getAttribute("data-view") || "3d";
+    }
+
+    function zoomView(factor) {
+      if (currentView() === "section") {
+        sectionFrustumHeight = sectionClamp(
+          sectionFrustumHeight * factor,
+          SECTION_MIN_FRUSTUM_HEIGHT,
+          SECTION_MAX_FRUSTUM_HEIGHT
+        );
+        updateSectionFrustum();
+      } else {
+        controls.scale = factor;
+        controls.update();
+      }
+    }
+
+    function resetZoom() {
+      if (currentView() === "section") {
+        sectionFrustumHeight = SECTION_VIEW_HEIGHT;
+        updateSectionFrustum();
+      } else {
+        const preset = cameraPresets[currentView()] || cameraPresets["3d"];
+        camera.position.copy(preset);
+        controls.target.set(0, 35, 0);
+        controls.update();
+      }
+    }
+
+    if (zoomInButton) zoomInButton.addEventListener("click", function () { zoomView(ZOOM_STEP); });
+    if (zoomOutButton) zoomOutButton.addEventListener("click", function () { zoomView(1 / ZOOM_STEP); });
+    if (zoomResetButton) zoomResetButton.addEventListener("click", resetZoom);
 
     const sectionKeyboardButtons = Array.from(document.querySelectorAll(".section-keyboard-part"));
     sectionKeyboardButtons.forEach(function (button) {

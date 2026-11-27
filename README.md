@@ -39,7 +39,7 @@ Open http://localhost:8000.
 - `simulation.html` - Simulation page
 - `about.html` - About page
 - `privacy.html` - Privacy policy
-- `terms.html` - Terms and conditions
+- Terms and conditions - available in the site footer dialog
 - `assets/css/styles.css` - design tokens, shared components, and layout
 - `assets/js/main.js` - navigation, Privacy/Terms links, and contact form
 - `assets/js/simulation.js` - physics, controller, 3D scene, section view, charts, and guided tour

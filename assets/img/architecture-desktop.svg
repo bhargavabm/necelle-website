@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" width="880" height="340" role="img" aria-labelledby="arch-d-title arch-d-desc" font-family="inherit">
+  <title id="arch-d-title">Control loop architecture, horizontal layout</title>
+  <desc id="arch-d-desc">Wind sensors measure wind direction. Misalignment feeds a PD controller, then a deadband and rate limit, then the yaw motor, which turns the nacelle. The nacelle heading feeds back to the misalignment.</desc>
+  <defs>
+    <marker id="arch-d-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/>
+    </marker>
+  </defs>
+
+  <!-- Box 1: wind sensors -->
+  <rect x="8" y="50" width="132" height="84" rx="4" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+  <text x="74" y="84" text-anchor="middle" font-size="16" fill="#14213d">Wind vane and</text>
+  <text x="74" y="112" text-anchor="middle" font-size="16" fill="#14213d">anemometer</text>
+
+  <!-- Box 2: misalignment -->
+  <rect x="160" y="50" width="120" height="84" rx="4" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+  <text x="220" y="84" text-anchor="middle" font-size="16" fill="#14213d">Misalignment e</text>
+  <text x="220" y="112" text-anchor="middle" font-size="14" fill="#4a5670">wind minus heading</text>
+
+  <!-- Box 3: PD controller -->
+  <rect x="300" y="50" width="120" height="84" rx="4" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+  <text x="360" y="84" text-anchor="middle" font-size="16" fill="#14213d">PD controller</text>
+  <text x="360" y="112" text-anchor="middle" font-size="14" fill="#4a5670">Kp e + Kd de/dt</text>
+
+  <!-- Box 4: deadband and rate limit -->
+  <rect x="440" y="50" width="140" height="84" rx="4" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+  <text x="510" y="84" text-anchor="middle" font-size="16" fill="#14213d">Deadband and</text>
+  <text x="510" y="112" text-anchor="middle" font-size="16" fill="#14213d">rate limit</text>
+
+  <!-- Box 5: yaw motor -->
+  <rect x="600" y="50" width="110" height="84" rx="4" fill="#ffffff" stroke="#0f766e" stroke-width="1.5"/>
+  <text x="655" y="84" text-anchor="middle" font-size="16" fill="#14213d">Yaw motor</text>
+  <text x="655" y="112" text-anchor="middle" font-size="14" fill="#4a5670">first-order lag</text>
+
+  <!-- Box 6: nacelle heading -->
+  <rect x="730" y="50" width="142" height="84" rx="4" fill="#f7f8fa" stroke="#0f766e" stroke-width="1.5"/>
+  <text x="801" y="84" text-anchor="middle" font-size="16" fill="#14213d">Nacelle heading</text>
+  <text x="801" y="112" text-anchor="middle" font-size="14" fill="#4a5670">on the yaw bearing</text>
+
+  <!-- Forward arrows between boxes -->
+  <g stroke="#0f766e" stroke-width="2" marker-end="url(#arch-d-arrow)">
+    <line x1="140" y1="92" x2="160" y2="92"/>
+    <line x1="280" y1="92" x2="300" y2="92"/>
+    <line x1="420" y1="92" x2="440" y2="92"/>
+    <line x1="580" y1="92" x2="600" y2="92"/>
+    <line x1="710" y1="92" x2="730" y2="92"/>
+  </g>
+
+  <!-- Feedback: nacelle heading back to misalignment, below the boxes -->
+  <polyline points="801,134 801,250 220,250 220,138" fill="none" stroke="#4a5670" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arch-d-arrow)"/>
+</svg>
