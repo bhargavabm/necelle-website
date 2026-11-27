@@ -313,6 +313,36 @@
     generator.position.y = PAD_HEIGHT + 7 - towerTopY;
     yawAssembly.add(generator);
 
+    // SECTION CLICK LABELS
+    const sectionLabel = document.getElementById("section-label");
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    let hoveredPartMesh = null;
+    let activePartMesh = null;
+
+    const partMeshes = [];
+    const partNameByMesh = new Map();
+
+    function registerPart(mesh, name) {
+      partMeshes.push(mesh);
+      partNameByMesh.set(mesh, name);
+    }
+
+    registerPart(nacelle, "Nacelle");
+    registerPart(hub, "Rotor hub");
+    registerPart(rotor, "Blades");
+    registerPart(tower, "Tower");
+    registerPart(bearingCore, "Yaw bearing");
+    registerPart(bearingRing, "Yaw bearing");
+    registerPart(verticalShaft, "Vertical shaft");
+    registerPart(bottomHub, "Bottom hub");
+    registerPart(gearbox, "Gearbox");
+    registerPart(generator, "Generator");
+    registerPart(cabinet, "Ground cabinet");
+    registerPart(cabinetBody, "Ground cabinet");
+    registerPart(cabinetDoor, "Ground cabinet");
+    registerPart(cabinetHandle, "Ground cabinet");
+
     const windArrowMaterial = new THREE.MeshBasicMaterial({
       color: 0x0f766e,
       transparent: true,
@@ -362,6 +392,8 @@
     let sectionElevation = sectionDefaultElevation;
     let sectionFrustumHeight = SECTION_VIEW_HEIGHT;
     let sectionControlsEnabled = false;
+    let sectionClickStartX = 0;
+    let sectionClickStartY = 0;
     let activeCamera = camera;
 
     function sectionClamp(value, min, max) {
@@ -404,6 +436,54 @@
       sectionElevation = sectionDefaultElevation;
       sectionFrustumHeight = SECTION_VIEW_HEIGHT;
       applySectionCamera();
+    }
+
+    function projectToScreen(object, camera, container) {
+      const vector = new THREE.Vector3();
+      object.getWorldPosition(vector);
+      vector.project(camera);
+      const x = (vector.x * 0.5 + 0.5) * container.clientWidth;
+      const y = (-(vector.y * 0.5) + 0.5) * container.clientHeight;
+      return { x, y };
+    }
+
+    function showSectionLabel(mesh, name) {
+      activePartMesh = mesh;
+      sectionLabel.textContent = name;
+      sectionLabel.hidden = false;
+      const pos = projectToScreen(mesh, activeCamera, container);
+      const labelRect = sectionLabel.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      let left = pos.x - labelRect.width / 2;
+      let top = pos.y - labelRect.height - 8;
+      left = Math.max(8, Math.min(left, containerRect.width - labelRect.width - 8));
+      top = Math.max(8, Math.min(top, containerRect.height - labelRect.height - 8));
+      sectionLabel.style.left = left + "px";
+      sectionLabel.style.top = top + "px";
+    }
+
+    function hideSectionLabel() {
+      activePartMesh = null;
+      sectionLabel.hidden = true;
+    }
+
+    function toggleSectionLabel(mesh, name) {
+      if (activePartMesh === mesh) {
+        hideSectionLabel();
+      } else {
+        showSectionLabel(mesh, name);
+      }
+    }
+
+    function brightenMesh(mesh, brighten) {
+      const material = mesh.material;
+      if (!material) return;
+      if (brighten) {
+        material.emissive.setHex(0x222222);
+      } else {
+        material.emissive.setHex(0x000000);
+      }
+      material.needsUpdate = true;
     }
 
     applySectionCamera();
@@ -483,6 +563,18 @@
           color: windArrowMaterial.color.getHexString(),
           opacity: windArrowMaterial.opacity
         };
+      },
+      raycastAt: function (clientX, clientY) {
+        const rect = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(pointer, activeCamera);
+        const intersects = raycaster.intersectObjects(partMeshes, false);
+        if (intersects.length > 0) {
+          const hitMesh = intersects[0].object;
+          return { hit: true, part: partNameByMesh.get(hitMesh) };
+        }
+        return { hit: false, part: null };
       }
     };
 
@@ -602,24 +694,66 @@
     function sectionPointerDown(event) {
       if (!sectionControlsEnabled || event.pointerType === "touch" || event.button !== 0) return;
       sectionDragging = true;
+      sectionClickStartX = event.clientX;
+      sectionClickStartY = event.clientY;
       sectionLastX = event.clientX;
       sectionLastY = event.clientY;
       renderer.domElement.setPointerCapture(event.pointerId);
     }
 
     function sectionPointerMove(event) {
-      if (!sectionControlsEnabled || !sectionDragging || event.pointerType === "touch") return;
-      const deltaX = event.clientX - sectionLastX;
-      const deltaY = event.clientY - sectionLastY;
-      sectionLastX = event.clientX;
-      sectionLastY = event.clientY;
-      rotateSectionCamera(deltaX, deltaY);
+      if (!sectionControlsEnabled || event.pointerType === "touch") return;
+      if (sectionDragging) {
+        const deltaX = event.clientX - sectionLastX;
+        const deltaY = event.clientY - sectionLastY;
+        sectionLastX = event.clientX;
+        sectionLastY = event.clientY;
+        rotateSectionCamera(deltaX, deltaY);
+        return;
+      }
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, activeCamera);
+      const intersects = raycaster.intersectObjects(partMeshes, false);
+      if (intersects.length > 0) {
+        const hitMesh = intersects[0].object;
+        if (hoveredPartMesh !== hitMesh) {
+          if (hoveredPartMesh) brightenMesh(hoveredPartMesh, false);
+          hoveredPartMesh = hitMesh;
+          brightenMesh(hitMesh, true);
+          renderer.domElement.style.cursor = "pointer";
+        }
+      } else {
+        if (hoveredPartMesh) {
+          brightenMesh(hoveredPartMesh, false);
+          hoveredPartMesh = null;
+          renderer.domElement.style.cursor = "";
+        }
+      }
     }
 
     function sectionPointerUp(event) {
       sectionDragging = false;
       if (renderer.domElement.hasPointerCapture(event.pointerId)) {
         renderer.domElement.releasePointerCapture(event.pointerId);
+      }
+      if (!sectionControlsEnabled) return;
+      const dx = Math.abs(event.clientX - sectionClickStartX);
+      const dy = Math.abs(event.clientY - sectionClickStartY);
+      if (dx < 4 && dy < 4) {
+        const rect = renderer.domElement.getBoundingClientRect();
+        pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(pointer, activeCamera);
+        const intersects = raycaster.intersectObjects(partMeshes, false);
+        if (intersects.length > 0) {
+          const hitMesh = intersects[0].object;
+          const name = partNameByMesh.get(hitMesh);
+          toggleSectionLabel(hitMesh, name);
+        } else {
+          hideSectionLabel();
+        }
       }
     }
 
@@ -691,6 +825,13 @@
     renderer.domElement.addEventListener("pointermove", sectionPointerMove);
     renderer.domElement.addEventListener("pointerup", sectionPointerUp);
     renderer.domElement.addEventListener("pointercancel", sectionPointerUp);
+    renderer.domElement.addEventListener("pointerout", function () {
+      if (hoveredPartMesh) {
+        brightenMesh(hoveredPartMesh, false);
+        hoveredPartMesh = null;
+        renderer.domElement.style.cursor = "";
+      }
+    });
     renderer.domElement.addEventListener("wheel", sectionWheel, { passive: false });
     renderer.domElement.addEventListener("dblclick", sectionDoubleClick);
     renderer.domElement.addEventListener("touchstart", sectionTouchStart, { passive: false });
@@ -989,6 +1130,7 @@
         sectionDragging = false;
         sectionTouchMode = "none";
         sectionPinchDistance = 0;
+        hideSectionLabel();
       }
 
       setSectionClipping(section);
@@ -1007,6 +1149,23 @@
       button.addEventListener("click", function () {
         setView(button.dataset.view);
       });
+    });
+
+    const sectionKeyboardButtons = Array.from(document.querySelectorAll(".section-keyboard-part"));
+    sectionKeyboardButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const name = button.dataset.part;
+        const mesh = partMeshes.find(function (m) {
+          return partNameByMesh.get(m) === name;
+        });
+        if (mesh) toggleSectionLabel(mesh, name);
+      });
+    });
+
+    document.addEventListener("click", function (event) {
+      if (activePartMesh && !container.contains(event.target) && !sectionLabel.contains(event.target)) {
+        hideSectionLabel();
+      }
     });
 
     function rotorRpm() {
