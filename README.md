@@ -1,59 +1,61 @@
 # Automated Nacelle Alignment System
 
-Plain HTML, CSS, and JavaScript with no framework and no build step.
+## Live site
 
-## Status
+https://necelle-website.vercel.app/
 
-Complete:
+Replace this URL with the custom domain once it is connected.
 
-- Favicon added
-- Privacy policy page added
-- Terms and conditions page added
-- AI tag removed after project-wide search
-- Contact form (mailto) added
-- Key results replaced with measured simulation values
-- Simulation layout rebuilt and bounding-box checks passed at 1440px and 375px
+Custom domain: pending
 
-Still manual:
+## About
 
-- Visual review of `screenshots\rebuild-1440.png` and `screenshots\rebuild-375.png`
-- Custom domain connected in Vercel
-- Deployed to Vercel and checked on a phone and a laptop
-- Favicon confirmed in the browser tab on the live site
-- Guided tour voice narration verified with Voice on
-- Placeholders confirmed (team details, contact, last updated date)
+A wind turbine nacelle turns on its yaw bearing to face the wind. This project models the control loop, the PD controller with deadband and rate limit, and shows the result in a live browser simulation with 3D, Section, and Output views.
+
+## What the site contains
+
+- Home: `index.html`
+- Simulation: `simulation.html`
+- Architecture on the About page: `about.html#architecture`
+- About: `about.html`
+- Privacy policy: `privacy.html`
+- Terms and conditions dialog: in the footer on Home, About, and Privacy policy
+
+## Measured results
+
+The Stable preset was run 10 times and these are the median results. Settling time is 27.59 s, with a range of 19.74 s to 38.52 s. Mean absolute error after settling is 2.21 degrees, with a range of 1.41 to 3.09 degrees. Steady power is 99.83 percent, with a range of 99.70 to 99.92 percent. The wind model is random, so results vary between runs.
 
 ## Run locally
 
-Serve this folder with any static file server. The checked command is:
-
 ```text
-python -m http.server 8000
+python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open http://localhost:8000.
-
-## Files
-
-- `index.html` - Home page
-- `simulation.html` - Simulation page
-- `about.html` - About page
-- `privacy.html` - Privacy policy
-- Terms and conditions - available in the site footer dialog
-- `assets/css/styles.css` - design tokens, shared components, and layout
-- `assets/js/main.js` - navigation, Privacy/Terms links, and contact form
-- `assets/js/simulation.js` - physics, controller, 3D scene, section view, charts, and guided tour
-- `assets/data/results.json` - measured simulation results
-- `assets/img/` - favicon
+Open http://127.0.0.1:8000. The 3D view needs an internet connection because Three.js and Chart.js load from cdnjs.cloudflare.com.
 
 ## Deploy
 
-1. Import the repository in Vercel.
-2. Use no build command.
-3. Set the output directory to the project root.
+The site is static. Import the repository into Vercel with no build command and the project root as the output directory. `vercel.json` sets the security headers.
+
+## Repository layout
+
+- `index.html`
+- `simulation.html`
+- `about.html`
+- `privacy.html`
+- `assets/css/`
+- `assets/js/`
+- `assets/img/`
+- `assets/fonts/`
+- `assets/data/`
+- `vercel.json`
+- `.gitignore`
+- `.vercelignore`
+
+## Licence and contact
+
+The content is a student project by Bhargava B M and Ashish K S, UVCE Bengaluru. Contact: bhargavabm2007@gmail.com.
 
 ## Development checks
 
-- `scripts/` - programmatic UI, overlap, and layout checks
-- `screenshots/` - screenshots from layout checks
-- Backup folders: `backup-before-fix/`, `backup-before-fix2/`, `backup-before-rebuild/`
+`scripts/` contains local UI, overlap, and layout checks. `screenshots/` contains images from those checks. These are development checks and are not deployed.
